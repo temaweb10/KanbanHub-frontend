@@ -1,0 +1,1 @@
+.board{display:flex;align-items:center;justify-content:center}.column{min-width:300px;min-height:400px;padding:20px 10px;border-radius:12px;margin:10px;display:flex;align-items:center;flex-direction:column;border:1px solid #000}.kanbanCard{width:200px;padding:10px;border-radius:6px;margin:5px 0;cursor:grab;border:1px solid red}

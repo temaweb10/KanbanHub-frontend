@@ -1,0 +1,49 @@
+.root {
+  background-color: #fff;
+  padding: 14px 0;
+  border-bottom: 2px solid #f4f4f6;
+  margin-bottom: 30px;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  background-color: black;
+  color: #fff;
+  font-weight: 700;
+  line-height: 35px;
+  text-transform: uppercase;
+  letter-spacing: 0.15px;
+  border-radius: 1px;
+  padding: 0 10px;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #4361ee;
+  }
+}
+
+.rightContent {
+  button {
+    margin-left: 10px;
+  }
+  display: flex;
+  align-items: center;
+  .avatar {
+    margin-left: 14px;
+  }
+}
+
+.link {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  margin-right: 14px;
+}
+.link:hover {
+  text-decoration: underline;
+}
