@@ -20,17 +20,38 @@ function App() {
   return (
     <>
       <Header />
-      <Container maxWidth="lg">
-        <Routes>
-          {/*      <Route path="/" element={<Home />} /> */}
-          {/*           <Route path="/posts/:id" element={<FullPost />} />
+
+      <Routes>
+        {/*      <Route path="/" element={<Home />} /> */}
+        {/*           <Route path="/posts/:id" element={<FullPost />} />
           <Route path="/add-post" element={<AddPost />} /> */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Registration />} />
-          <Route path="/board" element={<KanbanBoard />} />
-          <Route path="*" element={<notFound />} />
-        </Routes>
-      </Container>
+        <Route
+          path="/login"
+          element={
+            <Container maxWidth="lg">
+              <Login />
+            </Container>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Container maxWidth="lg">
+              <Registration />
+            </Container>
+          }
+        />
+        <Route path="/board" element={<KanbanBoard />} />
+        <Route
+          path="*"
+          element={
+            <Container maxWidth="lg">
+              {" "}
+              <notFound />
+            </Container>
+          }
+        />
+      </Routes>
     </>
   );
 }

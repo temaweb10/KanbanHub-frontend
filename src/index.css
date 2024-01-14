@@ -4,3 +4,28 @@ button {
   background-color: #6788f3 !important;
   border-radius: 9px !important;
 }
+.column {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 200px;
+  background-color: lightgray;
+}
+
+.card {
+  margin: 5px 0;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.cardList {
+  min-height: 100px;
+}
+
+.card.dragging {
+  opacity: 0.5;
+}

@@ -1,1 +1,60 @@
-.board{display:flex;align-items:center;justify-content:center}.column{min-width:300px;min-height:400px;padding:20px 10px;border-radius:12px;margin:10px;display:flex;align-items:center;flex-direction:column;border:1px solid #000}.kanbanCard{width:200px;padding:10px;border-radius:6px;margin:5px 0;cursor:grab;border:1px solid red}
+.board {
+  display: flex;
+  /*   align-items: center; */
+  padding-left: 4rem;
+}
+.column {
+  min-width: 300px;
+  /*   min-height: 400px; */
+  padding: 20px 10px;
+  border-radius: 12px;
+  margin: 10px;
+  display: flex;
+  /*   align-items: center; */
+  flex-direction: column;
+
+  background-color: #f1f2f4;
+}
+.card {
+  background-color: #ffffff;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  box-shadow: 0px 1px 1px #091e4240, 0px 0px 1px #091e424f;
+  color: #172b4d;
+  cursor: pointer;
+}
+
+.columnTitle {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0;
+  padding: 6px 8px 6px 12px;
+  background-color: transparent;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  cursor: pointer;
+  color: #172b4d;
+}
+
+.columnContent {
+  width: 100%;
+  padding: 6px;
+}
+
+.buttonAddCard {
+  border: 0px;
+  outline: 0px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 6px;
+  background-color: rgba(0, 0, 0, 0) !important;
+  color: #172b4d !important;
+}
+.buttonAddCard:focus {
+  border: 0px;
+  outline: 0px;
+}
