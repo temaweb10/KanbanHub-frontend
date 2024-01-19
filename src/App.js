@@ -1,54 +1,61 @@
 import Container from "@mui/material/Container";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
-import Header from "./components/Header/Header";
+import AuthRoute from "./components/AuthRoute";
+import PageLayout from "./components/PageLayout";
+import RedirectAuthRoute from "./components/RedirectAuthRoute";
+import Dashboards from "./pages/Dashboards/Dashboards";
 import KanbanBoard from "./pages/KanbanBoard/KanbanBoard";
 import { Login } from "./pages/Login/Login";
+import NotFound from "./pages/NotFound/NotFound";
 import { Registration } from "./pages/Registration/Registration";
-import { fetchAuthMe, selectorIsAuth } from "./redux/slices/auth";
-/* 
-import { Header } from "./components";
-import { AddPost, FullPost, Home, Login, Registration } from "./pages";
- */
 function App() {
-  const dispatch = useDispatch();
-  const isAuth = useSelector(selectorIsAuth);
-  useEffect(() => {
-    dispatch(fetchAuthMe());
-  }, []);
   return (
     <>
-      <Header />
-
       <Routes>
-        {/*      <Route path="/" element={<Home />} /> */}
-        {/*           <Route path="/posts/:id" element={<FullPost />} />
-          <Route path="/add-post" element={<AddPost />} /> */}
         <Route
           path="/login"
           element={
-            <Container maxWidth="lg">
+            <PageLayout>
               <Login />
-            </Container>
+            </PageLayout>
           }
         />
+        <Route path="/" element={<RedirectAuthRoute />} />
         <Route
           path="/register"
           element={
-            <Container maxWidth="lg">
-              <Registration />
-            </Container>
+            <PageLayout>
+              <Container maxWidth="lg">
+                <Registration />
+              </Container>
+            </PageLayout>
           }
         />
-        <Route path="/board" element={<KanbanBoard />} />
+
+        <Route
+          path="/board"
+          element={
+            <PageLayout>
+              <KanbanBoard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path="/user/:idUser/dashboards/"
+          element={
+            <PageLayout>
+              <AuthRoute>
+                <Dashboards />
+              </AuthRoute>
+            </PageLayout>
+          }
+        />
         <Route
           path="*"
           element={
-            <Container maxWidth="lg">
-              {" "}
-              <notFound />
-            </Container>
+            <PageLayout>
+              <NotFound />
+            </PageLayout>
           }
         />
       </Routes>

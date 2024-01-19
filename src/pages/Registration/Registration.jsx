@@ -12,7 +12,7 @@ import styles from "../Login/Login.module.scss";
 
 export const Registration = () => {
   const isAuth = useSelector(selectorIsAuth);
-
+  document.title = "Регистрация";
   const {
     register,
     handleSubmit,

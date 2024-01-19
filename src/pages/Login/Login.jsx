@@ -11,7 +11,7 @@ import { fetchAuth, selectorIsAuth } from "../../redux/slices/auth";
 import styles from "./Login.module.scss";
 export const Login = () => {
   const isAuth = useSelector(selectorIsAuth);
-
+  document.title = "Авторизация";
   const {
     register,
     handleSubmit,

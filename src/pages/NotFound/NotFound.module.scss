@@ -1,6 +1,19 @@
 .notFound {
-  height: 80vh;
+  height: 70vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.codeError {
+  font-size: 7vw;
+  font-weight: 700;
+  color: #000;
+}
+
+.errorText {
+  font-size: 2vw;
+  font-weight: 400;
+  color: #111;
 }

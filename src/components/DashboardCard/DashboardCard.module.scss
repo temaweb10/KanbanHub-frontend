@@ -1,0 +1,25 @@
+$dashboardWidth: 200px;
+$dashboardHeight: 100px;
+
+.dashboardCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #111;
+  border-radius: 8px;
+  padding: 6px 8px;
+  width: $dashboardWidth;
+  height: $dashboardHeight;
+  margin: 0 14px 12px 0;
+}
+
+.dashboardCard:hover {
+  background-color: #80808012;
+}
+
+.dashboardCardName {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}

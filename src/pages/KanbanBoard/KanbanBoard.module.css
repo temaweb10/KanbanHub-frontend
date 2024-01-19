@@ -4,8 +4,8 @@
   padding-left: 4rem;
 }
 .column {
-  min-width: 300px;
-  /*   min-height: 400px; */
+  /*   min-width: 300px;
+   min-height: 400px;  */
   padding: 20px 10px;
   border-radius: 12px;
   margin: 10px;
@@ -25,7 +25,13 @@
   color: #172b4d;
   cursor: pointer;
 }
-
+.cardEmpty {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ffffff;
+  min-height: 44px;
+}
 .columnTitle {
   font-size: 18px;
   font-weight: 600;
@@ -42,7 +48,7 @@
 
 .columnContent {
   width: 100%;
-  padding: 6px;
+  padding: 16px 6px 6px 6px;
 }
 
 .buttonAddCard {
@@ -57,4 +63,9 @@
 .buttonAddCard:focus {
   border: 0px;
   outline: 0px;
+}
+
+.columnParent {
+  width: 300px;
+  height: 400px;
 }

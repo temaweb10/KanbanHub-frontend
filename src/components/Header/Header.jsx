@@ -32,14 +32,9 @@ const Header = () => {
                     Написать статью
                   </Button>
                 </Link> */}
-                <Button
-                  onClick={onClickLogout}
-                  variant="contained"
-                  color="error"
-                  className={styles.button}
-                >
+                <button onClick={onClickLogout} className={styles.button}>
                   Выйти
-                </Button>
+                </button>
 
                 <Link to="/g">
                   <Avatar
