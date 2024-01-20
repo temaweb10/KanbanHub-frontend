@@ -51,6 +51,16 @@ function App() {
           }
         />
         <Route
+          path="/dashboard/:idProject/"
+          element={
+            <PageLayout>
+              <AuthRoute>
+                <KanbanBoard />
+              </AuthRoute>
+            </PageLayout>
+          }
+        />
+        <Route
           path="*"
           element={
             <PageLayout>

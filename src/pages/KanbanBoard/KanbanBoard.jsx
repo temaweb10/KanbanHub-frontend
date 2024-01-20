@@ -1,9 +1,8 @@
-import { Fragment, useEffect, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import Card from "../../components/Card/Card";
+import axios from "../../axios";
 import DragDropCards from "../../components/DragDropCards/DragDropCards";
-import Task from "../../components/Task/Task";
 const ITEM_TYPES = {
   CARD: "card",
   TASK: "task",
@@ -31,7 +30,202 @@ const DATASET = {
     "card-3": { id: "card-3", title: "Fun Todos", taskIds: ["task-4"] },
     "card-4": { id: "card-4", title: "Completed", taskIds: ["task-5"] },
   },
+  columns: [
+    {
+      _id: "65a3a81cc797b7925a99fc38",
+      name: "ПРОВЕРКА АПДdfЕЙfffffТ",
+      columnId: "finished",
+      kanbanCards: [
+        {
+          _id: "65a3aa55d79dcb3cd176b7be",
+          nameCard: "Додsdfsdf авторизацию",
+          description: "до 24 января",
+          columnId: "finished",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+      ],
+    },
+    {
+      name: "Проверка12354",
+      columnId: "Проверка12354_1705225383722",
+      kanbanCards: [
+        {
+          _id: "65a3ad0171dd900ae93718fb",
+          nameCard: "Додsdfsdf авторизацию",
+          description: "до 24 января",
+          columnId: "Проверка12354_1705225383722",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+        {
+          _id: "65a3ad1271dd900ae9371903",
+          nameCard: "Додsdfsdf авторизацию",
+          description: "до 24 января",
+          columnId: "Проверка12354_1705225383722",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+      ],
+      _id: "65a3aca771dd900ae93718e3",
+    },
+    {
+      name: "Проверка12354_1705225383722",
+      columnId: "Проверка12354_1705225383722_1705225411573",
+      kanbanCards: [],
+      _id: "65a3acc371dd900ae93718ee",
+    },
+    {
+      name: "sdsdsd",
+      columnId: "sdsdsd_1705225566819",
+      kanbanCards: [
+        {
+          _id: "65a3ad7371dd900ae937191a",
+          nameCard: "aaaaa2222",
+          description: "до 24 января",
+          columnId: "forExecution",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+      ],
+      _id: "65a3ad5e71dd900ae937190b",
+    },
+    {
+      name: "фф",
+      columnId: "фф_1705256860664",
+      kanbanCards: [],
+      _id: "65a4279c4b35c6b5b2c6c65a",
+    },
+  ],
   cardOrder: ["card-1", "card-2", "card-3", "card-4"],
+};
+
+const data = {
+  _id: "65a3a81cc797b7925a99fc36",
+  nameProject: "testpgroject",
+  code: "tntdfu2",
+  kanbanCardsLength: 0,
+  participants: [
+    {
+      user: "659d5aa3924625af1c10f7b1",
+      role: "admin",
+      _id: "65a3a81cc797b7925a99fc37",
+    },
+  ],
+  columns: [
+    {
+      _id: "65a3a81cc797b7925a99fc38",
+      name: "ПРОВЕРКА АПДdfЕЙfffffТ",
+      columnId: "finished",
+      kanbanCards: [
+        {
+          _id: "65a3aa55d79dcb3cd176b7be",
+          nameCard: "Додsdfsdf авторизацию",
+          description: "до 24 января",
+          columnId: "finished",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+      ],
+    },
+    {
+      name: "Проверка12354",
+      columnId: "Проверка12354_1705225383722",
+      kanbanCards: [
+        {
+          _id: "65a3ad0171dd900ae93718fb",
+          nameCard: "Додsdfsdf авторизацию",
+          description: "до 24 января",
+          columnId: "Проверка12354_1705225383722",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+        {
+          _id: "65a3ad1271dd900ae9371903",
+          nameCard: "Додsdfsdf авторизацию",
+          description: "до 24 января",
+          columnId: "Проверка12354_1705225383722",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+      ],
+      _id: "65a3aca771dd900ae93718e3",
+    },
+    {
+      name: "Проверка12354_1705225383722",
+      columnId: "Проверка12354_1705225383722_1705225411573",
+      kanbanCards: [],
+      _id: "65a3acc371dd900ae93718ee",
+    },
+    {
+      name: "sdsdsd",
+      columnId: "sdsdsd_1705225566819",
+      kanbanCards: [
+        {
+          _id: "65a3ad7371dd900ae937191a",
+          nameCard: "aaaaa2222",
+          description: "до 24 января",
+          columnId: "forExecution",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+        {
+          _id: "65a3ad7371dd900ae9371fgf",
+          nameCard: "aa1111111222222243",
+          description: "ANUS",
+          columnId: "forExecution",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+        {
+          _id: "65a3ad7371dd900ae9371f44gf",
+          nameCard: "BCD",
+          description: "ANUS",
+          columnId: "forExecution",
+          projectId: "659d38d5c7125108530e10ed",
+          codeNum: "tntdfu2-0",
+          creator: "659d5aa3924625af1c10f7b1",
+          comments: [],
+          __v: 0,
+        },
+      ],
+      _id: "65a3ad5e71dd900ae937190b",
+    },
+    {
+      name: "фф",
+      columnId: "фф_1705256860664",
+      kanbanCards: [],
+      _id: "65a4279c4b35c6b5b2c6c65a",
+    },
+  ],
+  __v: 12,
 };
 
 const Container = styled.div`
@@ -60,18 +254,38 @@ const NewCard = styled.div`
   cursor: pointer;
 `;
 function KanbanBoard() {
+  const params = useParams();
   const [dataset, _] = useState(DATASET);
-
+  const [project, setProject] = useState(data);
+  const [isLoading, setIsLoading] = useState(true);
+  const [projectColumns, setProjectColumns] = useState(data.columns);
   const [tasks, setTasks] = useState(dataset.tasks);
-  const [cards, setCards] = useState(dataset.cards);
+  const [cards, setCards] = useState("");
   const [cardOrder, setCardOrder] = useState(dataset.cardOrder);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     localStorage.setItem(
       "aleka-trello-board-dataset",
       JSON.stringify({ tasks, cards, cardOrder })
     );
-  }, [tasks, cards, cardOrder]);
+  }, [tasks, cards, cardOrder]); */
+
+  useEffect(() => {
+    axios
+      .get(`/project/${params.idProject}`)
+      .then((res) => {
+        setProject(res.data);
+        setCards(res.data.columns);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log(cards);
+  }, [cards]);
 
   const onAddNewCard = () => {
     const newCard = {
@@ -88,7 +302,7 @@ function KanbanBoard() {
     setCardOrder(newCardOrder);
   };
 
-  return (
+  return isLoading === false ? (
     <Container>
       <Menu>
         <Note>
@@ -104,11 +318,15 @@ function KanbanBoard() {
         cards={cards}
         tasks={tasks}
         cardOrder={cardOrder}
+        projectColumns={projectColumns}
         setCards={setCards}
         setTasks={setTasks}
         setCardOrder={setCardOrder}
+        setProjectColumns={setProjectColumns}
       />
     </Container>
+  ) : (
+    <div>ЗАГРУЗКА</div>
   );
 }
 

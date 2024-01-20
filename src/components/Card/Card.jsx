@@ -55,7 +55,7 @@ function Card(props) {
   };
 
   return (
-    <Draggable draggableId={props.card.id} index={props.index}>
+    <Draggable draggableId={props.card._id} index={props.index}>
       {(provided) => (
         <CardContainer
           ref={provided.innerRef}
@@ -76,12 +76,12 @@ function Card(props) {
                 onDoubleClick={props.onTitleDoubleClick}
                 {...provided.dragHandleProps}
               >
-                {props.card.title}
+                {props.card.name}
               </Title>
             )}
             <Cross onClick={props.onRemoveCard}>x</Cross>
           </TitleBar>
-          <Droppable droppableId={props.card.id} type="task">
+          <Droppable droppableId={props.card._id} type="task">
             {(provided, snapshot) => (
               <Fragment>
                 <TaskList
@@ -91,11 +91,11 @@ function Card(props) {
                 >
                   {props.tasks.map((task, index) => (
                     <Task
-                      key={task.id}
+                      key={task._id}
                       task={task}
                       index={index}
                       onSaveTaskEdit={(content) =>
-                        props.onSaveTaskEdit(task.id, content)
+                        props.onSaveTaskEdit(task._id, content)
                       }
                       onTaskDoubleClick={() => props.onTaskDoubleClick(task)}
                       isTaskEditing={props.isTaskEditing(task)}

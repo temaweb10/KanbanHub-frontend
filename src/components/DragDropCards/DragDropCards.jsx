@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import axios from "../../axios";
 import Card from "../Card/Card";
 const CardsContainer = styled.div`
   margin: 2em;
@@ -25,11 +27,12 @@ function DragDropCards({
   setTasks,
   setCardOrder,
 }) {
+  const params = useParams();
   const [editing, setEditing] = useState(null);
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
-
+    console.log(result);
     if (
       !destination ||
       (destination.droppableId === source.droppableId &&
@@ -37,14 +40,18 @@ function DragDropCards({
     ) {
       return;
     }
-
+    console.log(type);
     if (type === ITEM_TYPES.CARD) {
-      reorderCards(source, destination, draggableId);
+      reorderCards(source, destination, draggableId); //перенос колонок
     } else {
-      // type === tasks
-      const start = cards[source.droppableId];
-      const finish = cards[destination.droppableId];
-      if (start.id === finish.id) {
+      const start = cards.find((el) => {
+        return el._id == source.droppableId;
+      });
+      const finish = cards.find((el) => {
+        return el._id == destination.droppableId;
+      });
+
+      if (start._id === finish._id) {
         reorderTasksWithinCard(
           start,
           source.index,
@@ -58,6 +65,7 @@ function DragDropCards({
   };
 
   const reorderCards = (source, destination, draggableId) => {
+    console.log(reorderCards);
     const newCardOrder = Array.from(cardOrder);
     newCardOrder.splice(source.index, 1);
     newCardOrder.splice(destination.index, 0, draggableId);
@@ -70,36 +78,62 @@ function DragDropCards({
     destinationIdx,
     draggableId
   ) => {
-    const newTaskIds = Array.from(card.taskIds);
-    newTaskIds.splice(sourceIdx, 1);
-    newTaskIds.splice(destinationIdx, 0, draggableId);
-    setCards({
-      ...cards,
-      [card.id]: {
-        ...card,
-        taskIds: newTaskIds,
-      },
-    });
+    /* внутри своей колонки */
+
+    const newTask = Array.from(card.kanbanCards);
+
+    newTask.splice(sourceIdx, 1);
+    newTask.splice(
+      destinationIdx,
+      0,
+      card.kanbanCards.find((el) => {
+        return el._id == draggableId;
+      })
+    );
+
+    /*   axios.post(`/project/${params.idProject}/kanbanCard-create/column/${card.columnId}`).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      alert(err)
+    }); */
   };
 
   const moveTask = (start, finish, sourceIdx, destinationIdx, draggableId) => {
-    const startTaskIds = Array.from(start.taskIds);
+    //перенос задания в другую колонку
+    const startTaskIds = Array.from(start.kanbanCards);
     startTaskIds.splice(sourceIdx, 1);
     const newStart = {
       ...start,
-      taskIds: startTaskIds,
+      kanbanCards: startTaskIds,
     };
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destinationIdx, 0, draggableId);
+    const finishTaskIds = Array.from(finish.kanbanCards);
+    finishTaskIds.splice(
+      destinationIdx,
+      0,
+      start.kanbanCards.find((el) => {
+        return el._id == draggableId;
+      })
+    );
     const newFinish = {
       ...finish,
-      taskIds: finishTaskIds,
+      kanbanCards: finishTaskIds,
     };
-    setCards({
-      ...cards,
-      [newStart.id]: newStart,
-      [newFinish.id]: newFinish,
-    });
+
+    setCards([
+      ...cards.map((cardsEl) => {
+        if (cardsEl._id === newFinish._id) {
+          return newFinish;
+        } else if (cardsEl._id !== newStart._id) {
+          return { ...cardsEl };
+        }
+
+        if (cardsEl._id === newStart._id) {
+          return newStart;
+        } else if (cardsEl._id !== newFinish._id) {
+          return { ...cardsEl };
+        }
+      }),
+    ]);
   };
 
   const onAddNewTask = (cardID, content) => {
@@ -117,14 +151,7 @@ function DragDropCards({
   };
 
   const onRemoveCard = (cardID) => {
-    const newCardOrder = cardOrder.filter((id) => id !== cardID);
-    setCardOrder(newCardOrder);
-
-    const cardTaskIds = cards[cardID].taskIds;
-    cardTaskIds.forEach((taskID) => delete tasks[taskID]);
-    delete cards[cardID];
-    setCards(cards);
-    setTasks(tasks);
+    setCards(cards.filter((el) => el._id !== cardID));
   };
 
   const onRemoveTask = (taskID, cardID) => {
@@ -164,25 +191,26 @@ function DragDropCards({
       <Droppable droppableId="all-cards" direction="horizontal" type="card">
         {(provided) => (
           <CardsContainer {...provided.droppableProps} ref={provided.innerRef}>
-            {cardOrder.map((id, index) => {
-              const card = cards[id];
-              const cardTasks = card.taskIds.map((taskId) => tasks[taskId]);
+            {cards.map((el, index) => {
+              /*   const card = cards[id];  */
+              /*   const cardTasks = card.taskIds.map((taskId) => tasks[taskId]); */
+
               return (
                 <Card
-                  key={card.id}
-                  card={card}
-                  tasks={cardTasks}
+                  key={el._id}
+                  card={el}
+                  tasks={el.kanbanCards}
                   index={index}
                   /*     onFocusClick={() => onFocusClick(card.id)} */
-                  onSaveTitleEdit={(title) => onSaveTitleEdit(card.id, title)}
-                  onRemoveCard={() => onRemoveCard(card.id)}
-                  onAddNewTask={(content) => onAddNewTask(card.id, content)}
+                  onSaveTitleEdit={(title) => onSaveTitleEdit(el._id, title)}
+                  onRemoveCard={() => onRemoveCard(el._id)}
+                  onAddNewTask={(content) => onAddNewTask(el._id, content)}
                   onSaveTaskEdit={(taskID, newContent) =>
-                    onSaveTaskEdit(taskID, card.id, newContent)
+                    onSaveTaskEdit(taskID, el._id, newContent)
                   }
-                  onTitleDoubleClick={() => setEditing(card.id)}
+                  onTitleDoubleClick={() => setEditing(el._id)}
                   onTaskDoubleClick={(task) => setEditing(task.id)}
-                  isTitleEditing={editing === card.id}
+                  isTitleEditing={editing === el._id}
                   isTaskEditing={(task) => editing === task.id}
                 />
               );

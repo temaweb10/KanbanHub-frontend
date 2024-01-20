@@ -18,13 +18,13 @@ function Task(props) {
     <TaskContainer>
       {props.isTaskEditing ? (
         <EditInput
-          key={props.task.id}
-          value={props.task.content}
+          key={props.task._id}
+          value={props.task.nameCard}
           onSave={props.onSaveTaskEdit}
           margin="0 0 8px 0"
         />
       ) : (
-        <Draggable draggableId={props.task.id} index={props.index}>
+        <Draggable draggableId={props.task._id} index={props.index}>
           {(provided, snapshot) => (
             <TaskContent
               {...provided.draggableProps}
@@ -33,7 +33,7 @@ function Task(props) {
               isDragging={snapshot.isDragging}
               onDoubleClick={props.onTaskDoubleClick}
             >
-              {props.task.content}
+              {props.task.nameCard}
             </TaskContent>
           )}
         </Draggable>
