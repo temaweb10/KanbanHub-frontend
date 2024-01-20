@@ -267,7 +267,7 @@ function KanbanBoard() {
     localStorage.setItem(
       "aleka-trello-board-dataset",
       JSON.stringify({ tasks, cards, cardOrder })
-    );
+    ); 
   }, [tasks, cards, cardOrder]); */
 
   useEffect(() => {
