@@ -1,0 +1,1 @@
+.button{font-size:calc(6px + 8*(100vw - 320px)/880);font-weight:600;color:#fff;border:1.7px solid #000;background-color:#000;padding:.5rem;margin-top:4px;cursor:pointer}.button:hover{transition:.4s;background-color:#fff;border:1.7px solid #000;color:#111}

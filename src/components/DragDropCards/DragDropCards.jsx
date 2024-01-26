@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../../axios";
 import Card from "../Card/Card";
 const CardsContainer = styled.div`
-  margin: 2em;
   display: flex;
   @media (max-width: 720px) {
     flex-direction: column;
@@ -118,8 +117,7 @@ function DragDropCards({
       ...finish,
       kanbanCards: finishTaskIds,
     };
-
-    setCards([
+    console.log([
       ...cards.map((cardsEl) => {
         if (cardsEl._id === newFinish._id) {
           return newFinish;
@@ -134,6 +132,48 @@ function DragDropCards({
         }
       }),
     ]);
+    axios
+      .post(`/project/${params.idProject}/updateColumns`, {
+        newColumns: [
+          ...cards.map((cardsEl) => {
+            if (cardsEl._id === newFinish._id) {
+              return newFinish;
+            } else if (cardsEl._id !== newStart._id) {
+              return { ...cardsEl };
+            }
+
+            if (cardsEl._id === newStart._id) {
+              return newStart;
+            } else if (cardsEl._id !== newFinish._id) {
+              return { ...cardsEl };
+            }
+          }),
+        ],
+      })
+      .then((res) => {
+        console.log(res.data);
+
+        setCards(res.data.columns);
+      })
+      .catch((err) => {
+        alert(err);
+        return <Navigate to={"/"} />;
+      });
+    /*  setCards([
+      ...cards.map((cardsEl) => {
+        if (cardsEl._id === newFinish._id) {
+          return newFinish;
+        } else if (cardsEl._id !== newStart._id) {
+          return { ...cardsEl };
+        }
+
+        if (cardsEl._id === newStart._id) {
+          return newStart;
+        } else if (cardsEl._id !== newFinish._id) {
+          return { ...cardsEl };
+        }
+      }),
+    ]); */
   };
 
   const onAddNewTask = (cardID, content) => {

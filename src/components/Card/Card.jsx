@@ -89,7 +89,8 @@ function Card(props) {
                   {...provided.droppableProps}
                   isDraggingOver={snapshot.isDraggingOver}
                 >
-                  {props.tasks.map((task, index) => (
+                  {console.log(props.card)}
+                  {props.card?.kanbanCards?.map((task, index) => (
                     <Task
                       key={task._id}
                       task={task}

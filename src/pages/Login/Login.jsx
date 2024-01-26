@@ -1,5 +1,5 @@
 import { Input } from "@mui/material";
-import Button from "@mui/material/Button";
+/* import Button from "@mui/material/Button"; */
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -7,6 +7,8 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import Button from "../../components/UI/Button/Button";
+import inputStyles from "../../components/UI/Input/Input.module.scss";
 import { fetchAuth, selectorIsAuth } from "../../redux/slices/auth";
 import styles from "./Login.module.scss";
 export const Login = () => {
@@ -44,7 +46,7 @@ export const Login = () => {
   if (isAuth) {
     return <Navigate to="/" />;
   }
-
+  console.log(inputStyles.input);
   return (
     <div className={styles.loginBoxParent}>
       <h5 className={styles.title}>Вход в аккаунт</h5>

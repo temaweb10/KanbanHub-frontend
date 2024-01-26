@@ -1,8 +1,11 @@
+/* import { Container } from "@mui/material"; */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../../axios";
 import DragDropCards from "../../components/DragDropCards/DragDropCards";
+import Loader from "../../components/Loader/Loader";
+import styles from "./KanbanBoard.module.css";
 const ITEM_TYPES = {
   CARD: "card",
   TASK: "task",
@@ -229,16 +232,12 @@ const data = {
 };
 
 const Container = styled.div`
-  margin: 2em;
   display: flex;
   @media (max-width: 720px) {
     flex-direction: column;
   }
-  align-items: center;
-  justify-items: center;
 `;
 const Menu = styled.div`
-  margin: 2em;
   display: flex;
   flex-direction: column;
 `;
@@ -256,7 +255,7 @@ const NewCard = styled.div`
 function KanbanBoard() {
   const params = useParams();
   const [dataset, _] = useState(DATASET);
-  const [project, setProject] = useState(data);
+  const [project, setProject] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [projectColumns, setProjectColumns] = useState(data.columns);
   const [tasks, setTasks] = useState(dataset.tasks);
@@ -303,30 +302,40 @@ function KanbanBoard() {
   };
 
   return isLoading === false ? (
-    <Container>
-      <Menu>
-        <Note>
-          you can add, edit, or remove cards & tasks. <br />
-          double click to edit card title or task content. <br />
-          task is removed when content is empty. <br />
-          drag/drop card or task to desired order. <br />
-          your edited changes are saved in local storage.
-        </Note>
-        <NewCard onClick={onAddNewCard}>+ New Card</NewCard>
-      </Menu>
-      <DragDropCards
-        cards={cards}
-        tasks={tasks}
-        cardOrder={cardOrder}
-        projectColumns={projectColumns}
-        setCards={setCards}
-        setTasks={setTasks}
-        setCardOrder={setCardOrder}
-        setProjectColumns={setProjectColumns}
-      />
+    <Container maxWidth="xl" className={styles.main}>
+      <div className={styles.mainContent}>
+        <div className={styles.projectInfo}>
+          <h2 className={styles.projectName}>
+            Доска: <b>{project.nameProject}</b>
+          </h2>
+        </div>
+
+        <div style={{ display: "flex" }}>
+          <DragDropCards
+            cards={cards}
+            tasks={tasks}
+            cardOrder={cardOrder}
+            projectColumns={projectColumns}
+            setCards={setCards}
+            setTasks={setTasks}
+            setCardOrder={setCardOrder}
+            setProjectColumns={setProjectColumns}
+          />
+          <Menu>
+            <Note>
+              you can add, edit, or remove cards & tasks. <br />
+              double click to edit card title or task content. <br />
+              task is removed when content is empty. <br />
+              drag/drop card or task to desired order. <br />
+              your edited changes are saved in local storage.
+            </Note>
+            <NewCard onClick={onAddNewCard}>+ New Card</NewCard>
+          </Menu>
+        </div>
+      </div>
     </Container>
   ) : (
-    <div>ЗАГРУЗКА</div>
+    <Loader />
   );
 }
 
