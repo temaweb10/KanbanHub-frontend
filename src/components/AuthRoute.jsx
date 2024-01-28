@@ -15,7 +15,7 @@ function AuthRoute({ children }) {
     if (isAuth) {
       return children;
     } else {
-      return <Navigate replace to="/register" />;
+      return <Navigate replace to="/login" />;
     }
   }
 }

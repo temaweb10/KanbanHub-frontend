@@ -273,6 +273,7 @@ function KanbanBoard() {
     axios
       .get(`/project/${params.idProject}`)
       .then((res) => {
+        document.title = `Дашбоард - ${res.data.nameProject}`;
         setProject(res.data);
         setCards(res.data.columns);
         setIsLoading(false);
@@ -287,7 +288,7 @@ function KanbanBoard() {
   }, [cards]);
 
   const onAddNewCard = () => {
-    const newCard = {
+    /*  const newCard = {
       id: "card-" + genRandomID(),
       title: "**New**",
       taskIds: [],
@@ -298,7 +299,19 @@ function KanbanBoard() {
       ...cards,
       [newCard.id]: newCard,
     });
-    setCardOrder(newCardOrder);
+    setCardOrder(newCardOrder); */
+    axios
+      .post(`/project/${params.idProject}/columnCreate`, {
+        name: "фф",
+      })
+      .then((res) => {
+        setProject(res.data);
+        setCards(res.data.columns);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
 
   return isLoading === false ? (

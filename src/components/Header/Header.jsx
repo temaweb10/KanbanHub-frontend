@@ -1,21 +1,18 @@
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout, selectorIsAuth } from "../../redux/slices/auth";
+import HeaderMenu from "../HeaderMenu/HeaderMenu";
 import styles from "./Header.module.scss";
 const Header = () => {
   const dispath = useDispatch();
   const isAuth = useSelector(selectorIsAuth);
-  console.log(isAuth);
-  const onClickLogout = () => {
-    if (window.confirm("Вы точно хотите выйти из аккаунта")) {
-      dispath(logout());
-      window.localStorage.removeItem("token");
-    }
-  };
+  const userData = useSelector((state) => state?.auth?.data);
+  const [menuVisible, setMenuVisible] = useState(false);
+  console.log(userData);
 
   return (
     <div className={styles.root}>
@@ -27,37 +24,35 @@ const Header = () => {
           <div className={styles.rightContent}>
             {isAuth ? (
               <>
-                {/*  <Link to="/add-post">
-                  <Button className={styles.button} variant="contained">
-                    Написать статью
-                  </Button>
-                </Link> */}
-                <button onClick={onClickLogout} className={styles.button}>
+                {/*  <button onClick={onClickLogout} className={styles.button}>
                   Выйти
                 </button>
+ */}
+                <Avatar
+                  className={styles.avatar}
+                  style={{
+                    backgroundColor: "#eee",
+                    color: "#000",
+                    border: "1px solid #ccc",
+                    fontFamily: "Montserrat,Roboto,Helvetica,Arial,sans-serif",
+                  }}
+                  onClick={() => {
+                    console.log("ONCLICK");
+                    setMenuVisible(true);
+                    console.log(menuVisible);
+                  }}
+                >
+                  {userData.fullName.slice(0, 1).toUpperCase()}
+                </Avatar>
 
-                <Link to="/g">
-                  <Avatar
-                    /*   alt={obj.user.fullName} */
-                    className={styles.avatar}
-                    src={
-                      "https://catherineasquithgallery.com/uploads/posts/2023-01/1674320044_catherineasquithgallery-com-p-serii-fon-tik-tok-foto-70.jpg"
-                    }
-                  />
-                </Link>
+                <HeaderMenu
+                  userData={userData}
+                  visible={menuVisible}
+                  setMenuVisible={setMenuVisible}
+                />
               </>
             ) : (
               <>
-                {/*  <Link to="/login">
-                  <Button className={styles.button} variant="outlined">
-                    Войти
-                  </Button>
-                </Link> */}
-                {/*   <Link to="/register">
-                  <Button className={styles.button} variant="contained">
-                    Создать аккаунт
-                  </Button>
-                </Link> */}
                 <Link to="/login" className={styles.link}>
                   Войти
                 </Link>
