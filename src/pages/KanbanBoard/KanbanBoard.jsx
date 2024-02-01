@@ -1,10 +1,14 @@
 /* import { Container } from "@mui/material"; */
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../../axios";
 import DragDropCards from "../../components/DragDropCards/DragDropCards";
 import Loader from "../../components/Loader/Loader";
+import Button from "../../components/UI/Button/Button";
+import Input from "../../components/UI/Input/Input";
+import Modal from "../../components/UI/Modal/Modal";
 import styles from "./KanbanBoard.module.css";
 const ITEM_TYPES = {
   CARD: "card",
@@ -257,18 +261,16 @@ function KanbanBoard() {
   const [dataset, _] = useState(DATASET);
   const [project, setProject] = useState();
   const [isLoading, setIsLoading] = useState(true);
+
   const [projectColumns, setProjectColumns] = useState(data.columns);
   const [tasks, setTasks] = useState(dataset.tasks);
   const [cards, setCards] = useState("");
+
   const [cardOrder, setCardOrder] = useState(dataset.cardOrder);
-
-  /*   useEffect(() => {
-    localStorage.setItem(
-      "aleka-trello-board-dataset",
-      JSON.stringify({ tasks, cards, cardOrder })
-    ); 
-  }, [tasks, cards, cardOrder]); */
-
+  const [modal, setModal] = useState(false);
+  const [inviteLink, setInviteLink] = useState("");
+  const [linkIsLoading, setLinkIsLoading] = useState(true);
+  /*   const [role, setRole] = useState(""); */
   useEffect(() => {
     axios
       .get(`/project/${params.idProject}`)
@@ -288,21 +290,9 @@ function KanbanBoard() {
   }, [cards]);
 
   const onAddNewCard = () => {
-    /*  const newCard = {
-      id: "card-" + genRandomID(),
-      title: "**New**",
-      taskIds: [],
-    };
-    const newCardOrder = Array.from(cardOrder);
-    newCardOrder.unshift(newCard.id);
-    setCards({
-      ...cards,
-      [newCard.id]: newCard,
-    });
-    setCardOrder(newCardOrder); */
     axios
       .post(`/project/${params.idProject}/columnCreate`, {
-        name: "фф",
+        name: "test",
       })
       .then((res) => {
         setProject(res.data);
@@ -318,10 +308,68 @@ function KanbanBoard() {
     <Container maxWidth="xl" className={styles.main}>
       <div className={styles.mainContent}>
         <div className={styles.projectInfo}>
+          {" "}
+          {/*   <Button
+            onClick={() => {
+              setModal(true);
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <PersonAddIcon />
+              Пригласить в команду
+            </div>
+          </Button>
           <h2 className={styles.projectName}>
             Доска: <b>{project.nameProject}</b>
-          </h2>
+          </h2> */}
         </div>
+
+        <Modal setVisible={setModal} visible={modal}>
+          {/*   <Input
+            readonly={true}
+            placeholder="Текст для копирования еще не был сгенерирован"
+            className={styles.copyingText}
+          /> */}
+          <>
+            <span>Для приглашения участника выберите его роль в команде</span>
+            <select
+              onChange={(e) => {
+                console.log(e.target.value);
+                if (e.target.value) {
+                  axios
+                    .get(`/project/${project._id}/generateInviteLink`)
+                    .then((res) => {
+                      console.log(res.data);
+                      setInviteLink(
+                        `http://localhost:3000/accept-invite/${res.data}`
+                      );
+                      setLinkIsLoading(false);
+                    })
+                    .catch((err) => {
+                      alert(err.response.data.message);
+                      setModal(true);
+                    });
+                } else {
+                  setLinkIsLoading(true);
+                }
+              }}
+            >
+              <option value="">Выберите роль</option>
+              <option value="member">Участник</option>
+              <option value="admin">Админ</option>
+            </select>
+            {!linkIsLoading ? (
+              <Input
+                readonly={true}
+                placeholder="Текст для копирования еще не был сгенерирован"
+                className={styles.copyingText}
+                value={inviteLink}
+              />
+            ) : (
+              ""
+            )}
+          </>
+        </Modal>
 
         <div style={{ display: "flex" }}>
           <DragDropCards
@@ -335,13 +383,13 @@ function KanbanBoard() {
             setProjectColumns={setProjectColumns}
           />
           <Menu>
-            <Note>
+            {/*   <Note>
               you can add, edit, or remove cards & tasks. <br />
               double click to edit card title or task content. <br />
               task is removed when content is empty. <br />
               drag/drop card or task to desired order. <br />
               your edited changes are saved in local storage.
-            </Note>
+            </Note> */}
             <NewCard onClick={onAddNewCard}>+ New Card</NewCard>
           </Menu>
         </div>
@@ -350,10 +398,6 @@ function KanbanBoard() {
   ) : (
     <Loader />
   );
-}
-
-function genRandomID() {
-  return (Math.random() + 1).toString(36).substring(7);
 }
 
 export default KanbanBoard;

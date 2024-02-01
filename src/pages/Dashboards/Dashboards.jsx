@@ -14,7 +14,7 @@ function Dashboards() {
   const [dashboards, setDashboards] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [modal, setModal] = useState(false);
-  const [modalInputValue, setModalInputValue] = useState("");
+
   const userId = useSelector((state) => state?.auth?.data?._id);
   const navigate = useNavigate();
   let modalInputRef = useRef();

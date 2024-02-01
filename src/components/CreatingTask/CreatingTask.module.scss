@@ -1,0 +1,51 @@
+.createConatiner {
+  width: 100%;
+
+  position: relative;
+  z-index: 10;
+
+  background-color: #fff;
+  border-radius: 6px;
+  /* margin-bottom: 10px; */
+}
+
+.createFooter {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 8px;
+  border-top: 1px solid #eee;
+}
+
+.input {
+  padding: 0;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  overflow: hidden;
+  color: #202430;
+  background: transparent;
+  transition: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 14px 8px;
+}
+
+.pressEnter {
+  font-size: 10px;
+  font-weight: 500;
+  color: #7b7575;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.footerIcons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

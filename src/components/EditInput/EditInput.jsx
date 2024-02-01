@@ -18,6 +18,8 @@ function EditInput(props) {
       onChange={(e) => setVal(e.target.value)}
       onKeyPress={(event) => {
         if (event.key === "Enter" || event.key === "Escape") {
+          console.log(props.onSave);
+          console.log(val);
           props.onSave(val);
           event.preventDefault();
           event.stopPropagation();

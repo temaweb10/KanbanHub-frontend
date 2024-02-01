@@ -1,0 +1,30 @@
+.cardContainer {
+  margin: 8px;
+  /*   border: 1px solid lightgrey; */
+  border-radius: 4px;
+  min-width: 270px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.titleBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 17px;
+
+  color: #7b7575;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.taskList {
+  min-height: 100px;
+  height: 100%;
+}

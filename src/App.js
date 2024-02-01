@@ -1,5 +1,6 @@
 import Container from "@mui/material/Container";
 import { Route, Routes } from "react-router-dom";
+import AcceptInvite from "./components/AcceptInvite/AcceptInvite";
 import AuthRoute from "./components/AuthRoute";
 import PageLayout from "./components/PageLayout";
 import RedirectAuthRoute from "./components/RedirectAuthRoute";
@@ -33,19 +34,21 @@ function App() {
         />
 
         <Route
-          path="/board"
-          element={
-            <PageLayout>
-              <KanbanBoard />
-            </PageLayout>
-          }
-        />
-        <Route
           path="/user/:idUser/dashboards/"
           element={
             <PageLayout>
               <AuthRoute>
                 <Dashboards />
+              </AuthRoute>
+            </PageLayout>
+          }
+        />
+        <Route
+          path="/accept-invite/:token"
+          element={
+            <PageLayout>
+              <AuthRoute>
+                <AcceptInvite />
               </AuthRoute>
             </PageLayout>
           }

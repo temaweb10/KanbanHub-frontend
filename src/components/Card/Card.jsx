@@ -1,12 +1,12 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
+import CreatingTask from "../CreatingTask/CreatingTask";
 import EditInput from "../EditInput/EditInput";
+import FindUser from "../FindUser/FindUser";
 import Task from "../Task/Task";
-const TitleBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
+import styles from "./Card.module.scss";
+
 const Title = styled.h3`
   padding: 8px;
   font-size: 1.5em;
@@ -22,18 +22,18 @@ const CardContainer = styled.div`
   margin: 8px;
   border: 1px solid lightgrey;
   border-radius: 4px;
-  width: 220px;
+  min-width: 270px;
   display: flex;
   flex-direction: column;
   background-color: white;
 `;
-const TaskList = styled.div`
+/* const TaskList = styled.div`
   padding: 8px;
   background-color: ${(props) =>
     props.isDraggingOver ? "skyblue" : "inherit"};
   min-height: 100px;
   height: 100%;
-`;
+`; */
 const NewTaskBar = styled.div`
   display: flex;
 `;
@@ -46,23 +46,61 @@ const NewTaskButton = styled.div`
 `;
 
 function Card(props) {
-  const [isAddingNewTask, setIsAddingNewTask] = useState(false);
+  const [isAddingNewTask, setIsAddingNewTask] = useState(true);
   const onSaveTask = (content) => {
-    if (content.trim() !== "") {
+    console.log(content);
+    if (content?.trim() !== "") {
       props.onAddNewTask(content);
     }
-    setIsAddingNewTask(false);
+    /*     setIsAddingNewTask(true); */
   };
+  const [newTask, setNewTask] = useState();
+  const addNewTaskRef = useRef();
+  const [showDiv, setShowDiv] = useState(false);
+  const inputRef = useRef(null);
+  const newTaskInputRef = useRef(null);
+  const divRef = useRef(null);
+
+  /* const onFocusHandler = () => {
+    setShowDiv(true);
+    console.log("onFocusHandler");
+  };
+
+  const onBlurHandler = (event) => {
+  if (
+      divRef.current &&
+      !divRef.current.contains(event.target) &&
+      inputRef.current &&
+      !inputRef.current.contains(event.target)
+    ) {
+      setShowDiv(false);
+    }
+
+    console.log(inputRef);
+    console.log(divRef);
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", onBlurHandler);
+    return () => {
+      document.removeEventListener("click", onBlurHandler);
+    };
+  }, []); */
 
   return (
     <Draggable draggableId={props.card._id} index={props.index}>
       {(provided) => (
-        <CardContainer
+        <div
+          className={styles.cardContainer}
           ref={provided.innerRef}
           {...provided.draggableProps}
           id={props.card.id}
+          /*  onClick={(e) => {
+            e.stopPropagation();
+            alert(111);
+          }} */
         >
-          <TitleBar>
+          <div className={styles.titleBar}>
             {props.isTitleEditing ? (
               <EditInput
                 key={props.card.id}
@@ -72,19 +110,37 @@ function Card(props) {
                 margin="20px 0 20px 8px"
               />
             ) : (
-              <Title
+              <div
+                className={styles.title}
                 onDoubleClick={props.onTitleDoubleClick}
                 {...provided.dragHandleProps}
               >
                 {props.card.name}
-              </Title>
+              </div>
             )}
             <Cross onClick={props.onRemoveCard}>x</Cross>
-          </TitleBar>
+          </div>
+
+          {/*   <input
+                onChange={newTask}
+                type="text"
+                ref={inputRef}
+                onFocus={onFocusHandler}
+                onBlur={onBlurHandler}
+              />
+              {showDiv && (
+                <div ref={divRef} style={{ position: "relative" }}>
+                  {" "}
+                  <FindUser />
+                </div>
+              )} */}
+          <CreatingTask onSaveTask={onSaveTask} idProject={props.idProject} />
+
           <Droppable droppableId={props.card._id} type="task">
             {(provided, snapshot) => (
               <Fragment>
-                <TaskList
+                <div
+                  className={styles.taskList}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   isDraggingOver={snapshot.isDraggingOver}
@@ -101,26 +157,12 @@ function Card(props) {
                       isTaskEditing={props.isTaskEditing(task)}
                     />
                   ))}
-                </TaskList>
+                </div>
                 {provided.placeholder}
               </Fragment>
             )}
           </Droppable>
-          <NewTaskBar>
-            {isAddingNewTask ? (
-              <EditInput
-                key="newtask"
-                value=""
-                onSave={onSaveTask}
-                margin="8px"
-              />
-            ) : (
-              <NewTaskButton onClick={() => setIsAddingNewTask(true)}>
-                + New Task
-              </NewTaskButton>
-            )}
-          </NewTaskBar>
-        </CardContainer>
+        </div>
       )}
     </Draggable>
   );

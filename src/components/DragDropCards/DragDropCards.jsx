@@ -203,6 +203,10 @@ function DragDropCards({
   };
 
   const onAddNewTask = async (columnId, content) => {
+    console.log({
+      nameCard: content,
+      columnId: columnId,
+    });
     await axios
       .post(`/project/${params.idProject}/kanbanCardCreate`, {
         nameCard: content,
@@ -262,7 +266,12 @@ function DragDropCards({
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="all-cards" direction="horizontal" type="card">
+      <Droppable
+        droppableId="all-cards"
+        direction="horizontal"
+        type="card"
+        isDropDisabled={true}
+      >
         {(provided) => (
           <CardsContainer {...provided.droppableProps} ref={provided.innerRef}>
             {cards.map((el, index) => {
@@ -286,6 +295,7 @@ function DragDropCards({
                   onTaskDoubleClick={(task) => setEditing(task.id)}
                   isTitleEditing={editing === el._id}
                   isTaskEditing={(task) => editing === task.id}
+                  idProject={params.idProject}
                 />
               );
             })}
