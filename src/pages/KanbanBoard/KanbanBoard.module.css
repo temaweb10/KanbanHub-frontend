@@ -104,3 +104,22 @@
   width: 300px;
   height: 400px;
 }
+
+.icon {
+  font-size: 7px;
+}
+
+.copyContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  padding: 0 12px;
+  overflow: hidden;
+  color: #60636c;
+  background: rgba(96, 99, 108, 0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border-radius: 8px;
+}

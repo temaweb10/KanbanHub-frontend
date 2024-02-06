@@ -9,50 +9,50 @@ import styles from "./CreatingTask.module.scss";
 function CreatingTask(props) {
   const params = useParams();
   const [newTask, setNewTask] = useState();
-  const [usersInProject, setUsersInProject] = useState(undefined);
+  const [usersInProject, setUsersInProject] = useState(props.usersInProject);
   const [usersInProjectIsLoading, setUsersInProjectIsLoading] = useState(false);
   const [showDiv, setShowDiv] = useState(false);
   const [showFindUsers, setShowFindUsers] = useState(false);
+  const [executor, setExecutor] = useState([]);
   const inputRef = useRef(null);
   const divRef = useRef(null);
+  const showFindUsersRef = useRef(null);
   const createFooterRef = useRef(null);
+  console.log(usersInProject);
 
-  const getUsersInProject = async (props) => {
-    let { data } = await axios.get(`/project/${params.idProject}/users`);
-    console.log(data);
-    setUsersInProject(data);
-    setUsersInProjectIsLoading(true);
-  };
-
-  useEffect(() => {
+  /*  useEffect(() => {
     if (!usersInProject) {
       getUsersInProject();
     }
-  }, [showFindUsers]);
+  }, [showFindUsers]); */
 
-  const onFocusHandler = (event) => {
+  const onFocusHandler = () => {
     setShowDiv(true);
-
-    console.log("onFocusHandler");
   };
 
   const onBlurHandler = (event) => {
+    console.log(event.target.dataset.menuItem);
+    console.log(divRef.current.contains(event.target));
     if (
-      inputRef.current &&
       !inputRef.current.contains(event.target) &&
-      createFooterRef.current &&
-      !createFooterRef.current.contains(event.target)
+      !createFooterRef.current.contains(event.target) &&
+      !divRef.current.contains(event.target) &&
+      !showFindUsersRef.current.contains(event.target) /*  &&
+      !event.target.dataset.menuItem */
     ) {
       setShowDiv(false);
       setShowFindUsers(false);
     }
-    if (divRef.current && divRef.current.contains(event.target)) {
-      setShowFindUsers(true);
-      setShowDiv(true);
-    }
   };
+  const getUsersInProject = async (props) => {
+    let { data } = await axios.get(`/project/${params.idProject}/users`);
+    console.log(data);
+    setUsersInProject(data);
 
+    setUsersInProjectIsLoading(true);
+  };
   useEffect(() => {
+    getUsersInProject();
     document.addEventListener("click", onBlurHandler);
     return () => {
       document.removeEventListener("click", onBlurHandler);
@@ -65,12 +65,9 @@ function CreatingTask(props) {
         onSave={props.onSaveTask}
         onKeyPress={(event) => {
           if (event.key === "Enter" || event.key === "Escape") {
+            props.onSaveTask(event.target.value, executor);
+            setShowFindUsers(false);
             setShowDiv(false);
-            console.log(props.onSaveTask);
-            console.log(event.target.value);
-            props.onSaveTask(event.target.value);
-            event.preventDefault();
-            event.stopPropagation();
           }
         }}
         onChange={newTask}
@@ -81,8 +78,11 @@ function CreatingTask(props) {
         placeholder="Добавить задачу"
       />
 
-      {showDiv && (
-        <div className={styles.createFooter} ref={createFooterRef}>
+      <div ref={createFooterRef}>
+        <div
+          className={styles.createFooter}
+          style={{ display: `${showDiv ? "flex" : "none"}` }}
+        >
           <div className={styles.flex}>
             <span className={styles.pressEnter}>Нажмите Enter</span>
             <CheckIcon fontSize="8" htmlColor="#7b7575" />
@@ -92,7 +92,8 @@ function CreatingTask(props) {
               htmlColor="#7b7575"
               titleAccess="Исполнители"
               fontSize="24"
-              onClick={() => {
+              ref={showFindUsersRef}
+              onClick={(e) => {
                 if (showFindUsers) {
                   setShowFindUsers(false);
                 } else {
@@ -102,17 +103,22 @@ function CreatingTask(props) {
             />
           </div>
         </div>
-      )}
 
-      {showFindUsers && (
-        <div ref={divRef} style={{ position: "relative" }}>
-          {setUsersInProjectIsLoading ? (
-            <FindUser users={usersInProject} />
-          ) : (
-            <Loader />
-          )}
+        <div style={{ position: "absolute" }} className={styles.showElements}>
+          <div ref={divRef}>
+            {usersInProjectIsLoading ? (
+              <FindUser
+                showFindUsers={showFindUsers}
+                users={usersInProject}
+                setShowFindUsers={setShowFindUsers}
+                setExecutor={setExecutor}
+              />
+            ) : (
+              <Loader />
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

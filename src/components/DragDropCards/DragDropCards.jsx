@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Navigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -28,6 +28,7 @@ function DragDropCards({
 }) {
   const params = useParams();
   const [editing, setEditing] = useState(null);
+  const [usersInProject, setUsersInProject] = useState();
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
@@ -202,15 +203,12 @@ function DragDropCards({
       });
   };
 
-  const onAddNewTask = async (columnId, content) => {
-    console.log({
-      nameCard: content,
-      columnId: columnId,
-    });
+  const onAddNewTask = async (columnId, content, executor) => {
     await axios
       .post(`/project/${params.idProject}/kanbanCardCreate`, {
         nameCard: content,
         columnId: columnId,
+        executor: executor ? [...executor] : undefined,
       })
       .then((doc) => {
         setCards(doc.data);
@@ -238,7 +236,13 @@ function DragDropCards({
     delete tasks[taskID];
     setTasks(tasks);
   };
-
+  const getUsersInProject = async (props) => {
+    let { data } = await axios.get(`/project/${params.idProject}/users`);
+    console.log(data);
+    setUsersInProject(data);
+    /*   
+    setUsersInProjectIsLoading(true); */
+  };
   const onSaveTitleEdit = (cardID, newTitle) => {
     if (newTitle !== cards[cardID].title) {
       setCards({
@@ -264,6 +268,10 @@ function DragDropCards({
     setEditing(null);
   };
 
+  useEffect(() => {
+    getUsersInProject();
+  }, []);
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable
@@ -287,7 +295,9 @@ function DragDropCards({
                   /*     onFocusClick={() => onFocusClick(card.id)} */
                   onSaveTitleEdit={(title) => onSaveTitleEdit(el._id, title)}
                   onRemoveCard={() => onRemoveCard(el.columnId)}
-                  onAddNewTask={(content) => onAddNewTask(el.columnId, content)}
+                  onAddNewTask={(content, executor) =>
+                    onAddNewTask(el.columnId, content, executor)
+                  }
                   onSaveTaskEdit={(taskID, newContent) =>
                     onSaveTaskEdit(taskID, el._id, newContent)
                   }
@@ -296,6 +306,7 @@ function DragDropCards({
                   isTitleEditing={editing === el._id}
                   isTaskEditing={(task) => editing === task.id}
                   idProject={params.idProject}
+                  usersInProject={usersInProject}
                 />
               );
             })}

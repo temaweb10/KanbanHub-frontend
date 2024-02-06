@@ -1,6 +1,9 @@
 /* import { Container } from "@mui/material"; */
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
+
+import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../../axios";
@@ -270,6 +273,7 @@ function KanbanBoard() {
   const [modal, setModal] = useState(false);
   const [inviteLink, setInviteLink] = useState("");
   const [linkIsLoading, setLinkIsLoading] = useState(true);
+  const copyInputRef = useRef(null);
   /*   const [role, setRole] = useState(""); */
   useEffect(() => {
     axios
@@ -308,7 +312,16 @@ function KanbanBoard() {
     <Container maxWidth="xl" className={styles.main}>
       <div className={styles.mainContent}>
         <div className={styles.projectInfo}>
-          {" "}
+          <Button
+            onClick={() => {
+              setModal(true);
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <PersonAddIcon className={styles.icon} />
+              Пригласить в команду
+            </div>
+          </Button>{" "}
           {/*   <Button
             onClick={() => {
               setModal(true);
@@ -357,14 +370,28 @@ function KanbanBoard() {
               <option value="">Выберите роль</option>
               <option value="member">Участник</option>
               <option value="admin">Админ</option>
+              {/*   text.select();
+               */}
             </select>
             {!linkIsLoading ? (
-              <Input
-                readonly={true}
-                placeholder="Текст для копирования еще не был сгенерирован"
-                className={styles.copyingText}
-                value={inviteLink}
-              />
+              <div className={styles.copyContainer}>
+                <Input
+                  readonly={true}
+                  placeholder="Текст для копирования еще не был сгенерирован"
+                  className={styles.copyingText}
+                  value={inviteLink}
+                  refS={copyInputRef}
+                />
+                <ContentCopyIcon
+                  className={styles.icon}
+                  onClick={() => {
+                    navigator.clipboard.writeText(inviteLink);
+                    copyInputRef.current.select();
+                    toast("Here is your toast.");
+                    /*      console.log(copyInputRef.current); */
+                  }}
+                />
+              </div>
             ) : (
               ""
             )}

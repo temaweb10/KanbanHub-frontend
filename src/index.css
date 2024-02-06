@@ -49,3 +49,18 @@ input {
   display: flex;
   flex-direction: column;
 }
+
+.logo {
+  color: #111;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 35px;
+  text-transform: uppercase;
+  letter-spacing: 0.15px;
+  border-radius: 1px;
+  padding: 10px 10px;
+  text-decoration: none;
+}
+
+.avatar {
+}

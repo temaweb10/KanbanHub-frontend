@@ -47,45 +47,14 @@ const NewTaskButton = styled.div`
 
 function Card(props) {
   const [isAddingNewTask, setIsAddingNewTask] = useState(true);
-  const onSaveTask = (content) => {
+  const onSaveTask = (content, executor) => {
+    console.log(executor);
     console.log(content);
     if (content?.trim() !== "") {
-      props.onAddNewTask(content);
+      props.onAddNewTask(content, executor);
     }
     /*     setIsAddingNewTask(true); */
   };
-  const [newTask, setNewTask] = useState();
-  const addNewTaskRef = useRef();
-  const [showDiv, setShowDiv] = useState(false);
-  const inputRef = useRef(null);
-  const newTaskInputRef = useRef(null);
-  const divRef = useRef(null);
-
-  /* const onFocusHandler = () => {
-    setShowDiv(true);
-    console.log("onFocusHandler");
-  };
-
-  const onBlurHandler = (event) => {
-  if (
-      divRef.current &&
-      !divRef.current.contains(event.target) &&
-      inputRef.current &&
-      !inputRef.current.contains(event.target)
-    ) {
-      setShowDiv(false);
-    }
-
-    console.log(inputRef);
-    console.log(divRef);
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", onBlurHandler);
-    return () => {
-      document.removeEventListener("click", onBlurHandler);
-    };
-  }, []); */
 
   return (
     <Draggable draggableId={props.card._id} index={props.index}>
@@ -134,7 +103,11 @@ function Card(props) {
                   <FindUser />
                 </div>
               )} */}
-          <CreatingTask onSaveTask={onSaveTask} idProject={props.idProject} />
+          <CreatingTask
+            onSaveTask={onSaveTask}
+            idProject={props.idProject}
+            usersInProject={props.usersInProject}
+          />
 
           <Droppable droppableId={props.card._id} type="task">
             {(provided, snapshot) => (
