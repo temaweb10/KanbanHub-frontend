@@ -1,17 +1,18 @@
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 import { logout, selectorIsAuth } from "../../redux/slices/auth";
 import HeaderMenu from "../HeaderMenu/HeaderMenu";
 import styles from "./Header.module.scss";
+
 const Header = () => {
-  const dispath = useDispatch();
-  const isAuth = useSelector(selectorIsAuth);
-  const userData = useSelector((state) => state?.auth?.data);
   const [menuVisible, setMenuVisible] = useState(false);
+  const userData = useContext(UserContext);
+  const isAuth = Boolean(userData);
   console.log(userData);
 
   return (

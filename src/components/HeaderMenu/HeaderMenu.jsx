@@ -2,10 +2,12 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Avatar } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/slices/auth";
 import styles from "./HeaderMenu.module.scss";
 import MenuItem from "./MenuItem";
 function HeaderMenu({ visible, setMenuVisible, userData }) {
+  const navigate = useNavigate();
   let dispath = useDispatch();
   const divRef = useRef();
   useEffect(() => {
@@ -20,6 +22,7 @@ function HeaderMenu({ visible, setMenuVisible, userData }) {
     if (window.confirm("Вы точно хотите выйти из аккаунта")) {
       dispath(logout());
       window.localStorage.removeItem("token");
+      navigate("/login");
     }
   };
 

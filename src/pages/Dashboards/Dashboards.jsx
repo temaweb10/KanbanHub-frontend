@@ -1,3 +1,4 @@
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Container } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +12,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import styles from "./Dashboards.module.scss";
 function Dashboards() {
   document.title = "Дашбоарды";
-  const [dashboards, setDashboards] = useState("");
+  const [dashboards, setDashboards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modal, setModal] = useState(false);
 
@@ -51,7 +52,11 @@ function Dashboards() {
     }
   };
   const deleteDashboard = async (idProject) => {
-    if (window.confirm("Вы точно хотите удалить дашбоард?")) {
+    if (
+      window.confirm(
+        "Для удаления дашбоарда нажмите кнопку «Да». Обращаем внимание, что удаление приведет к потере всех данных внутри данного дашбоарда. "
+      )
+    ) {
       await axios
         .delete(`/project/${idProject}`)
         .then((res) => {
@@ -68,54 +73,76 @@ function Dashboards() {
     }
   };
   return (
-    <>
+    <div>
       {isLoading === false ? (
-        <Container maxWidth="lg" className={styles.containerDashboards}>
-          <h2 className={styles.dashboardTitle}>Дашбоарды</h2>
-          <div className={styles.dashboardCards}>
-            {dashboards.map((el) => {
-              return (
-                <DashboardCard
-                  nameDashboard={el.nameProject}
-                  idDashboard={el._id}
-                  isDeleting={
-                    el.participants.find((el) => {
-                      return el.user == userId && el.role == "admin";
-                    })
-                      ? true
-                      : false
-                  }
-                  key={el._id}
-                  deleteDashboard={deleteDashboard}
-                />
-              );
-            })}
+        dashboards.length ? (
+          <Container maxWidth="lg" className={styles.containerDashboards}>
+            <h2 className={styles.dashboardTitle}>Дашбоарды</h2>
+            <div className={styles.dashboardCards}>
+              {dashboards.map((el) => {
+                return (
+                  <DashboardCard
+                    nameDashboard={el.nameProject}
+                    idDashboard={el._id}
+                    isDeleting={
+                      el.participants.find((el) => {
+                        return el.user == userId && el.role == "admin";
+                      })
+                        ? true
+                        : false
+                    }
+                    key={el._id}
+                    deleteDashboard={deleteDashboard}
+                  />
+                );
+              })}
 
-            <div
-              className={styles.createDashboard}
-              onClick={() => {
-                setModal(true);
-              }}
-            >
-              + Новый дашбоард
-            </div>
-            <Modal setVisible={setModal} visible={modal}>
-              <div className="form">
-                <Input
-                  refS={modalInputRef}
-                  type="text"
-                  placeholder="Название дашбоарда"
-                />
-
-                <Button onClick={createDashboard}>Создать дашбоард</Button>
+              <div
+                className={styles.createDashboard}
+                onClick={() => {
+                  setModal(true);
+                }}
+              >
+                + Новый дашбоард
               </div>
-            </Modal>
+            </div>
+          </Container>
+        ) : (
+          <div className={styles.container}>
+            <div className={styles.containerInner}>
+              <h2 className={styles.title}>Дашбоарды</h2>
+              <h4 className={styles.subTitle}>
+                Здесь будут собраны все ваши дашбоарды
+              </h4>
+              <p className={styles.description}>
+                Добавьте дашбоард, чтобы создать задачи, отметить статус,
+                пригласить участников и многое другое
+              </p>
+              <button
+                className={["button", styles.button].join(" ")}
+                onClick={() => setModal(true)}
+              >
+                <AddCircleOutlineIcon className={styles.buttonIcon} />
+                Добавьте дашбоард
+              </button>
+            </div>
           </div>
-        </Container>
+        )
       ) : (
         <Loader />
       )}
-    </>
+      <Modal setVisible={setModal} visible={modal}>
+        <div className="form">
+          <Input
+            refS={modalInputRef}
+            type="text"
+            placeholder="Название дашбоарда"
+          />
+
+          <Button onClick={createDashboard}>Создать дашбоард</Button>
+        </div>
+      </Modal>
+    </div>
   );
 }
 

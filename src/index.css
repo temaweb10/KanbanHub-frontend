@@ -42,7 +42,7 @@ input {
 }
 
 .button {
-  background-color: red;
+  border-radius: 12px;
 }
 
 .form {

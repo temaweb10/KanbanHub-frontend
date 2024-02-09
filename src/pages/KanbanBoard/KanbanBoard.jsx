@@ -12,6 +12,7 @@ import Loader from "../../components/Loader/Loader";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import Modal from "../../components/UI/Modal/Modal";
+import indexPage from "../../indexPage.css";
 import styles from "./KanbanBoard.module.css";
 const ITEM_TYPES = {
   CARD: "card",
@@ -337,42 +338,53 @@ function KanbanBoard() {
           </h2> */}
         </div>
 
-        <Modal setVisible={setModal} visible={modal}>
+        <Modal
+          setVisible={setModal}
+          visible={modal}
+          title={"Пригласить людей в дашбоард"}
+        >
           {/*   <Input
             readonly={true}
             placeholder="Текст для копирования еще не был сгенерирован"
             className={styles.copyingText}
           /> */}
           <>
-            <span>Для приглашения участника выберите его роль в команде</span>
-            <select
-              onChange={(e) => {
-                console.log(e.target.value);
-                if (e.target.value) {
-                  axios
-                    .get(`/project/${project._id}/generateInviteLink`)
-                    .then((res) => {
-                      console.log(res.data);
-                      setInviteLink(
-                        `http://localhost:3000/accept-invite/${res.data}`
-                      );
-                      setLinkIsLoading(false);
-                    })
-                    .catch((err) => {
-                      alert(err.response.data.message);
-                      setModal(true);
-                    });
-                } else {
-                  setLinkIsLoading(true);
-                }
-              }}
-            >
-              <option value="">Выберите роль</option>
-              <option value="member">Участник</option>
-              <option value="admin">Админ</option>
-              {/*   text.select();
-               */}
-            </select>
+            <span className={styles.description}>
+              Для генерации пригласительной ссылки выберите роль участника
+              команде
+            </span>
+            <div className={styles.selectContainer}>
+              <select
+                className={styles.selectRole}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  if (e.target.value) {
+                    axios
+                      .get(`/project/${project._id}/generateInviteLink`)
+                      .then((res) => {
+                        console.log(res.data);
+                        setInviteLink(
+                          `http://localhost:3000/accept-invite/${res.data}`
+                        );
+                        setLinkIsLoading(false);
+                      })
+                      .catch((err) => {
+                        alert(err.response.data.message);
+                        setModal(true);
+                      });
+                  } else {
+                    setLinkIsLoading(true);
+                  }
+                }}
+              >
+                <option value="">Выберите роль</option>
+                <option value="member">Участник</option>
+                <option value="admin">Админ</option>
+                {/*   text.select();
+                 */}
+              </select>
+            </div>
+
             {!linkIsLoading ? (
               <div className={styles.copyContainer}>
                 <Input
@@ -383,6 +395,7 @@ function KanbanBoard() {
                   refS={copyInputRef}
                 />
                 <ContentCopyIcon
+                  title={"Скопировать пригласительную ссылку"}
                   className={styles.icon}
                   onClick={() => {
                     navigator.clipboard.writeText(inviteLink);
@@ -398,7 +411,7 @@ function KanbanBoard() {
           </>
         </Modal>
 
-        <div style={{ display: "flex" }}>
+        <div className={styles.boardContainer}>
           <DragDropCards
             cards={cards}
             tasks={tasks}

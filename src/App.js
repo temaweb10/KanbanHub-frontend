@@ -2,8 +2,13 @@ import Container from "@mui/material/Container";
 import { Route, Routes } from "react-router-dom";
 import AcceptInvite from "./components/AcceptInvite/AcceptInvite";
 import AuthRoute from "./components/AuthRoute";
+import BoardLayout from "./components/BoardLayout";
+import Header from "./components/Header/Header";
+import HeaderBoard from "./components/HeaderBoard/HeaderBoard";
 import PageLayout from "./components/PageLayout";
+import PageLayoutAuth from "./components/PageLayoutAuth";
 import RedirectAuthRoute from "./components/RedirectAuthRoute";
+import { UserProvider } from "./context/UserContext";
 import Dashboards from "./pages/Dashboards/Dashboards";
 import KanbanBoard from "./pages/KanbanBoard/KanbanBoard";
 import { Login } from "./pages/Login/Login";
@@ -36,39 +41,41 @@ function App() {
         <Route
           path="/user/:idUser/dashboards/"
           element={
-            <PageLayout>
+            <PageLayoutAuth>
               <AuthRoute>
                 <Dashboards />
               </AuthRoute>
-            </PageLayout>
+            </PageLayoutAuth>
           }
         />
         <Route
           path="/accept-invite/:token"
           element={
-            <PageLayout>
+            <PageLayoutAuth>
               <AuthRoute>
                 <AcceptInvite />
               </AuthRoute>
-            </PageLayout>
+            </PageLayoutAuth>
           }
         />
         <Route
           path="/dashboard/:idProject/"
           element={
-            <PageLayout>
+            <BoardLayout>
               <AuthRoute>
                 <KanbanBoard />
               </AuthRoute>
-            </PageLayout>
+            </BoardLayout>
           }
         />
         <Route
           path="*"
           element={
-            <PageLayout>
-              <NotFound />
-            </PageLayout>
+            <PageLayoutAuth>
+              <AuthRoute>
+                <NotFound />
+              </AuthRoute>
+            </PageLayoutAuth>
           }
         />
       </Routes>
