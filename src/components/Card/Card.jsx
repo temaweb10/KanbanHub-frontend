@@ -106,7 +106,7 @@ function Card(props) {
           <CreatingTask
             onSaveTask={onSaveTask}
             idProject={props.idProject}
-            usersInProject={props.usersInProject}
+            /*   usersInProject={props.usersInProject} */
           />
 
           <Droppable droppableId={props.card._id} type="task">

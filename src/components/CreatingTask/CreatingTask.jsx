@@ -1,15 +1,20 @@
 import CheckIcon from "@mui/icons-material/Check";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../axios";
+import { BoardContext } from "../../context/BoardContext";
 import FindUser from "../FindUser/FindUser";
 import Loader from "../Loader/Loader";
 import styles from "./CreatingTask.module.scss";
 function CreatingTask(props) {
   const params = useParams();
+  const { projectContext } = useContext(BoardContext);
   const [newTask, setNewTask] = useState();
-  const [usersInProject, setUsersInProject] = useState(props.usersInProject);
+  const [usersInProject, setUsersInProject] = useState(
+    projectContext.usersProject
+  );
+  console.log(projectContext);
   const [usersInProjectIsLoading, setUsersInProjectIsLoading] = useState(false);
   const [showDiv, setShowDiv] = useState(false);
   const [showFindUsers, setShowFindUsers] = useState(false);
@@ -18,13 +23,6 @@ function CreatingTask(props) {
   const divRef = useRef(null);
   const showFindUsersRef = useRef(null);
   const createFooterRef = useRef(null);
-  console.log(usersInProject);
-
-  /*  useEffect(() => {
-    if (!usersInProject) {
-      getUsersInProject();
-    }
-  }, [showFindUsers]); */
 
   const onFocusHandler = () => {
     setShowDiv(true);
@@ -44,15 +42,15 @@ function CreatingTask(props) {
       setShowFindUsers(false);
     }
   };
-  const getUsersInProject = async (props) => {
+  /*   const getUsersInProject = async (props) => {
     let { data } = await axios.get(`/project/${params.idProject}/users`);
     console.log(data);
     setUsersInProject(data);
 
     setUsersInProjectIsLoading(true);
-  };
+  }; */
   useEffect(() => {
-    getUsersInProject();
+    /*     getUsersInProject(); */
     document.addEventListener("click", onBlurHandler);
     return () => {
       document.removeEventListener("click", onBlurHandler);
@@ -106,16 +104,12 @@ function CreatingTask(props) {
 
         <div style={{ position: "absolute" }} className={styles.showElements}>
           <div ref={divRef}>
-            {usersInProjectIsLoading ? (
-              <FindUser
-                showFindUsers={showFindUsers}
-                users={usersInProject}
-                setShowFindUsers={setShowFindUsers}
-                setExecutor={setExecutor}
-              />
-            ) : (
-              <Loader />
-            )}
+            <FindUser
+              showFindUsers={showFindUsers}
+              users={usersInProject}
+              setShowFindUsers={setShowFindUsers}
+              setExecutor={setExecutor}
+            />
           </div>
         </div>
       </div>

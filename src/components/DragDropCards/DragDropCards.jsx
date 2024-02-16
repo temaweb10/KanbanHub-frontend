@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Navigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../../axios";
+import { BoardContext } from "../../context/BoardContext";
+import socket from "../../socket";
 import Card from "../Card/Card";
 const CardsContainer = styled.div`
   display: flex;
@@ -28,8 +30,8 @@ function DragDropCards({
 }) {
   const params = useParams();
   const [editing, setEditing] = useState(null);
-  const [usersInProject, setUsersInProject] = useState();
-
+  /*   const [usersInProject, setUsersInProject] = useState(); */
+  const { projectContext, updateData } = useContext(BoardContext);
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
     console.log(result);
@@ -114,10 +116,8 @@ function DragDropCards({
           }
         }),
       })
-      .then((res) => {
-        /*    console.log(res.data);
-
-      setCards(res.data.columns); */
+      .then(() => {
+        socket.emit("changeProject", params.idProject);
       })
       .catch((err) => {
         alert(err);
@@ -193,9 +193,7 @@ function DragDropCards({
         ],
       })
       .then((res) => {
-        /*    console.log(res.data);
-
-        setCards(res.data.columns); */
+        socket.emit("changeProject", params.idProject);
       })
       .catch((err) => {
         alert(err);
@@ -236,13 +234,12 @@ function DragDropCards({
     delete tasks[taskID];
     setTasks(tasks);
   };
-  const getUsersInProject = async (props) => {
+  /*   const getUsersInProject = async (props) => {
     let { data } = await axios.get(`/project/${params.idProject}/users`);
     console.log(data);
     setUsersInProject(data);
-    /*   
-    setUsersInProjectIsLoading(true); */
-  };
+  
+  }; */
   const onSaveTitleEdit = (cardID, newTitle) => {
     if (newTitle !== cards[cardID].title) {
       setCards({
@@ -268,9 +265,9 @@ function DragDropCards({
     setEditing(null);
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     getUsersInProject();
-  }, []);
+  }, []); */
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -282,7 +279,7 @@ function DragDropCards({
       >
         {(provided) => (
           <CardsContainer {...provided.droppableProps} ref={provided.innerRef}>
-            {cards.map((el, index) => {
+            {projectContext.columns.map((el, index) => {
               /*   const card = cards[id];  */
               /*   const cardTasks = card.taskIds.map((taskId) => tasks[taskId]); */
               console.log(el);
@@ -306,7 +303,7 @@ function DragDropCards({
                   isTitleEditing={editing === el._id}
                   isTaskEditing={(task) => editing === task.id}
                   idProject={params.idProject}
-                  usersInProject={usersInProject}
+                  usersInProject={projectContext.usersProject}
                 />
               );
             })}

@@ -1,10 +1,9 @@
 /* import { Container } from "@mui/material"; */
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { createContext, useEffect, useRef, useState } from "react";
-
-import toast, { Toaster } from "react-hot-toast";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { io } from "socket.io-client";
 import styled from "styled-components";
 import axios from "../../axios";
 import DragDropCards from "../../components/DragDropCards/DragDropCards";
@@ -12,6 +11,7 @@ import Loader from "../../components/Loader/Loader";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import Modal from "../../components/UI/Modal/Modal";
+import { BoardContext } from "../../context/BoardContext";
 import indexPage from "../../indexPage.css";
 import styles from "./KanbanBoard.module.css";
 const ITEM_TYPES = {
@@ -264,35 +264,43 @@ function KanbanBoard() {
   const params = useParams();
   const [dataset, _] = useState(DATASET);
   const [project, setProject] = useState();
-  const [isLoading, setIsLoading] = useState(true);
 
+  const [isLoading, setIsLoading] = useState(true);
+  const { projectContext, updateData } = useContext(BoardContext);
   const [projectColumns, setProjectColumns] = useState(data.columns);
   const [tasks, setTasks] = useState(dataset.tasks);
-  const [cards, setCards] = useState("");
+  const [cards, setCards] = useState(projectContext.columns);
 
   const [cardOrder, setCardOrder] = useState(dataset.cardOrder);
   const [modal, setModal] = useState(false);
   const [inviteLink, setInviteLink] = useState("");
   const [linkIsLoading, setLinkIsLoading] = useState(true);
   const copyInputRef = useRef(null);
-  /*   const [role, setRole] = useState(""); */
-  useEffect(() => {
-    axios
-      .get(`/project/${params.idProject}`)
-      .then((res) => {
-        document.title = `Дашбоард - ${res.data.nameProject}`;
-        setProject(res.data);
-        setCards(res.data.columns);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  }, []);
 
   useEffect(() => {
-    console.log(cards);
-  }, [cards]);
+    const socket = io("http://localhost:3333", {
+      cors: {
+        origin: "http://localhost:3333",
+        credentials: true,
+      },
+    });
+    const handleProjectUpdated = (projectUpdated) => {
+      console.log(projectUpdated);
+      updateData(projectUpdated);
+    };
+    socket.on("connect", () => {
+      /*    socket.emit("watchProject", "65c5db3069b549e26f388ce7");
+
+      socket.on("projectUpdated", handleProjectUpdated); */
+      socket.on("changeProjectState", handleProjectUpdated);
+    });
+    /*  const cleanup = () => {
+      socket.off("projectUpdated", handleProjectUpdated);
+    };
+    return () => {
+      cleanup();
+    }; */
+  }, []);
 
   const onAddNewCard = () => {
     axios
@@ -309,45 +317,16 @@ function KanbanBoard() {
       });
   };
 
-  return isLoading === false ? (
+  return (
     <Container maxWidth="xl" className={styles.main}>
       <div className={styles.mainContent}>
-        <div className={styles.projectInfo}>
-          <Button
-            onClick={() => {
-              setModal(true);
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <PersonAddIcon className={styles.icon} />
-              Пригласить в команду
-            </div>
-          </Button>{" "}
-          {/*   <Button
-            onClick={() => {
-              setModal(true);
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <PersonAddIcon />
-              Пригласить в команду
-            </div>
-          </Button>
-          <h2 className={styles.projectName}>
-            Доска: <b>{project.nameProject}</b>
-          </h2> */}
-        </div>
+        <div className={styles.projectInfo}></div>
 
         <Modal
           setVisible={setModal}
           visible={modal}
           title={"Пригласить людей в дашбоард"}
         >
-          {/*   <Input
-            readonly={true}
-            placeholder="Текст для копирования еще не был сгенерирован"
-            className={styles.copyingText}
-          /> */}
           <>
             <span className={styles.description}>
               Для генерации пригласительной ссылки выберите роль участника
@@ -360,7 +339,7 @@ function KanbanBoard() {
                   console.log(e.target.value);
                   if (e.target.value) {
                     axios
-                      .get(`/project/${project._id}/generateInviteLink`)
+                      .get(`/project/${projectContext._id}/generateInviteLink`)
                       .then((res) => {
                         console.log(res.data);
                         setInviteLink(
@@ -400,7 +379,7 @@ function KanbanBoard() {
                   onClick={() => {
                     navigator.clipboard.writeText(inviteLink);
                     copyInputRef.current.select();
-                    toast("Here is your toast.");
+                    /*      toast("Here is your toast."); */
                     /*      console.log(copyInputRef.current); */
                   }}
                 />
@@ -429,14 +408,16 @@ function KanbanBoard() {
               task is removed when content is empty. <br />
               drag/drop card or task to desired order. <br />
               your edited changes are saved in local storage.
-            </Note> */}
+            </Note> 
+            
+            /*  (
+    <Loader />
+  ); */}
             <NewCard onClick={onAddNewCard}>+ New Card</NewCard>
           </Menu>
         </div>
       </div>
     </Container>
-  ) : (
-    <Loader />
   );
 }
 
