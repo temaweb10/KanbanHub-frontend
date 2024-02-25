@@ -1,19 +1,15 @@
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import React, { useContext, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
-import { logout, selectorIsAuth } from "../../redux/slices/auth";
-import HeaderMenu from "../HeaderMenu/HeaderMenu";
+import MenuUser from "../MenuUser/MenuUser";
 import styles from "./Header.module.scss";
 
 const Header = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const userData = useContext(UserContext);
   const isAuth = Boolean(userData);
-  console.log(userData);
 
   return (
     <div className={styles.root}>
@@ -25,10 +21,6 @@ const Header = () => {
           <div className={styles.rightContent}>
             {isAuth ? (
               <>
-                {/*  <button onClick={onClickLogout} className={styles.button}>
-                  Выйти
-                </button>
- */}
                 <Avatar
                   className={styles.avatar}
                   style={{
@@ -38,15 +30,13 @@ const Header = () => {
                     fontFamily: "Montserrat,Roboto,Helvetica,Arial,sans-serif",
                   }}
                   onClick={() => {
-                    console.log("ONCLICK");
                     setMenuVisible(true);
-                    console.log(menuVisible);
                   }}
                 >
                   {userData.fullName.slice(0, 1).toUpperCase()}
                 </Avatar>
 
-                <HeaderMenu
+                <MenuUser
                   userData={userData}
                   visible={menuVisible}
                   setMenuVisible={setMenuVisible}

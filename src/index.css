@@ -8,6 +8,7 @@
 
 body {
   font-family: "Montserrat", sans-serif !important;
+  background-color: #f8f8fb !important;
 }
 
 button,
@@ -23,6 +24,13 @@ input {
   border-radius: 5px;
   width: 200px;
   background-color: lightgray;
+}
+
+.containerCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .card {

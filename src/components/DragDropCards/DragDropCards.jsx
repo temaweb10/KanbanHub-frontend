@@ -4,6 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../../axios";
 import { BoardContext } from "../../context/BoardContext";
+import { UserContext } from "../../context/UserContext";
 import socket from "../../socket";
 import Card from "../Card/Card";
 const CardsContainer = styled.div`
@@ -30,8 +31,8 @@ function DragDropCards({
 }) {
   const params = useParams();
   const [editing, setEditing] = useState(null);
-  /*   const [usersInProject, setUsersInProject] = useState(); */
-  const { projectContext, updateData } = useContext(BoardContext);
+  const userData = useContext(UserContext);
+  const { projectContext, updateBoardContext } = useContext(BoardContext);
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
     console.log(result);
@@ -84,9 +85,9 @@ function DragDropCards({
   ) => {
     console.log("reorderTasksWithinCard");
     /* внутри своей колонки */
-
+    console.log(card);
     const newTask = Array.from(card.kanbanCards);
-
+    console.log(newTask);
     newTask.splice(sourceIdx, 1);
     newTask.splice(
       destinationIdx,
@@ -95,8 +96,27 @@ function DragDropCards({
         return el._id == draggableId;
       })
     );
-
-    setCards(
+    console.log({
+      ...projectContext,
+      columns: cards.map((el) => {
+        if (el.columnId == card.columnId) {
+          return { ...el, kanbanCards: newTask };
+        } else {
+          return el;
+        }
+      }),
+    });
+    updateBoardContext({
+      ...projectContext,
+      columns: cards.map((el) => {
+        if (el.columnId == card.columnId) {
+          return { ...el, kanbanCards: newTask };
+        } else {
+          return el;
+        }
+      }),
+    });
+    /*  setCards( 
       cards.map((el) => {
         if (el.columnId == card.columnId) {
           return { ...el, kanbanCards: newTask };
@@ -104,7 +124,7 @@ function DragDropCards({
           return el;
         }
       })
-    );
+    ); */
 
     await axios
       .post(`/project/${params.idProject}/updateColumns`, {
@@ -117,7 +137,14 @@ function DragDropCards({
         }),
       })
       .then(() => {
-        socket.emit("changeProject", params.idProject);
+        socket.emit(
+          "changeProject",
+          JSON.stringify({
+            idUserChangedProject: userData._id,
+            idProject: params.idProject,
+          })
+        );
+        alert("change in column");
       })
       .catch((err) => {
         alert(err);
@@ -159,7 +186,25 @@ function DragDropCards({
       kanbanCards: finishTaskIds,
     };
 
-    setCards([
+    updateBoardContext({
+      ...projectContext,
+      columns: [
+        ...cards.map((cardsEl) => {
+          if (cardsEl._id === newFinish._id) {
+            return newFinish;
+          } else if (cardsEl._id !== newStart._id) {
+            return { ...cardsEl };
+          }
+
+          if (cardsEl._id === newStart._id) {
+            return newStart;
+          } else if (cardsEl._id !== newFinish._id) {
+            return { ...cardsEl };
+          }
+        }),
+      ],
+    });
+    /*  setCards([
       ...cards.map((cardsEl) => {
         if (cardsEl._id === newFinish._id) {
           return newFinish;
@@ -173,7 +218,7 @@ function DragDropCards({
           return { ...cardsEl };
         }
       }),
-    ]);
+    ]); */
     await axios
       .post(`/project/${params.idProject}/updateColumns`, {
         newColumns: [
@@ -193,7 +238,13 @@ function DragDropCards({
         ],
       })
       .then((res) => {
-        socket.emit("changeProject", params.idProject);
+        socket.emit(
+          "changeProject",
+          JSON.stringify({
+            idUserChangedProject: userData._id,
+            idProject: params.idProject,
+          })
+        );
       })
       .catch((err) => {
         alert(err);
@@ -209,7 +260,10 @@ function DragDropCards({
         executor: executor ? [...executor] : undefined,
       })
       .then((doc) => {
-        setCards(doc.data);
+        updateBoardContext({
+          ...projectContext,
+          columns: doc.data,
+        });
       })
       .catch((err) => {
         alert(err);
@@ -299,9 +353,9 @@ function DragDropCards({
                     onSaveTaskEdit(taskID, el._id, newContent)
                   }
                   onTitleDoubleClick={() => setEditing(el._id)}
-                  onTaskDoubleClick={(task) => setEditing(task.id)}
-                  isTitleEditing={editing === el._id}
-                  isTaskEditing={(task) => editing === task.id}
+                  onTaskDoubleClick={(task) => setEditing(task?.id)}
+                  isTitleEditing={editing === el?._id}
+                  isTaskEditing={(task) => editing === task?.id}
                   idProject={params.idProject}
                   usersInProject={projectContext.usersProject}
                 />

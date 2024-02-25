@@ -3,7 +3,6 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { io } from "socket.io-client";
 import styled from "styled-components";
 import axios from "../../axios";
 import DragDropCards from "../../components/DragDropCards/DragDropCards";
@@ -12,7 +11,9 @@ import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import Modal from "../../components/UI/Modal/Modal";
 import { BoardContext } from "../../context/BoardContext";
+import { UserContext } from "../../context/UserContext";
 import indexPage from "../../indexPage.css";
+import socket from "../../socket";
 import styles from "./KanbanBoard.module.css";
 const ITEM_TYPES = {
   CARD: "card",
@@ -266,11 +267,11 @@ function KanbanBoard() {
   const [project, setProject] = useState();
 
   const [isLoading, setIsLoading] = useState(true);
-  const { projectContext, updateData } = useContext(BoardContext);
+  const { projectContext, updateBoardContext } = useContext(BoardContext);
   const [projectColumns, setProjectColumns] = useState(data.columns);
   const [tasks, setTasks] = useState(dataset.tasks);
   const [cards, setCards] = useState(projectContext.columns);
-
+  const userData = useContext(UserContext);
   const [cardOrder, setCardOrder] = useState(dataset.cardOrder);
   const [modal, setModal] = useState(false);
   const [inviteLink, setInviteLink] = useState("");
@@ -278,22 +279,15 @@ function KanbanBoard() {
   const copyInputRef = useRef(null);
 
   useEffect(() => {
-    const socket = io("http://localhost:3333", {
-      cors: {
-        origin: "http://localhost:3333",
-        credentials: true,
-      },
-    });
-    const handleProjectUpdated = (projectUpdated) => {
-      console.log(projectUpdated);
-      updateData(projectUpdated);
+    const handleProjectUpdated = (resStringify) => {
+      const resDataParse = JSON.parse(resStringify);
+      if (userData._id !== resDataParse.idUserChangedProject) {
+        updateBoardContext(resDataParse.projectUpdated);
+      }
     };
-    socket.on("connect", () => {
-      /*    socket.emit("watchProject", "65c5db3069b549e26f388ce7");
 
-      socket.on("projectUpdated", handleProjectUpdated); */
-      socket.on("changeProjectState", handleProjectUpdated);
-    });
+    socket.on("changeProjectState", handleProjectUpdated);
+
     /*  const cleanup = () => {
       socket.off("projectUpdated", handleProjectUpdated);
     };

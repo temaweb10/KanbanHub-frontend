@@ -1,0 +1,23 @@
+.formTitle {
+  font-weight: 500;
+  font-size: 20px;
+  color: #242629;
+  margin: 0px 0px 8px 0px;
+}
+
+.formLabel {
+  font-weight: 500;
+  font-size: 14px;
+  color: #202430;
+}
+
+.form {
+  display: flex;
+  padding: 24px;
+  background: #fff;
+  flex-direction: column;
+  max-width: 500px;
+  border-radius: 12px;
+  width: 100%;
+  height: min-content;
+}

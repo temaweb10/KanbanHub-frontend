@@ -24,6 +24,7 @@ function Task(props) {
           margin="0 0 8px 0"
         />
       ) : ( */}
+
       <Draggable draggableId={props.task._id} index={props.index}>
         {(provided, snapshot) => (
           <div

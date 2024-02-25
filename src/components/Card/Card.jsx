@@ -127,7 +127,7 @@ function Card(props) {
                         props.onSaveTaskEdit(task._id, content)
                       }
                       onTaskDoubleClick={() => props.onTaskDoubleClick(task)}
-                      isTaskEditing={props.isTaskEditing(task)}
+                      /*     isTaskEditing={props.isTaskEditing(task)} */
                     />
                   ))}
                 </div>

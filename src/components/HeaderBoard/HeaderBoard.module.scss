@@ -17,9 +17,14 @@
   height: 100%;
   padding: 6px 12px 6px 6px;
   display: flex;
-  /*   justify-content: space-evenly; */
   align-items: center;
-  width: calc(100% - 80%);
+  width: 275px;
+  cursor: pointer;
+}
+
+.headerProjectInfo:hover {
+  background-color: #f5f5f5;
+  transition: 0.2s ease;
 }
 
 .headerContainer {
@@ -28,13 +33,14 @@
 }
 
 .avatarProject {
-  font-weight: 300;
-  line-height: 100%;
-  color: #202430;
-  background: #f8f8fb;
+  font-weight: 300 !important;
+  line-height: 100% !important;
+  color: #202430 !important;
+  background: #f8f8fb !important;
   cursor: pointer;
-  border: 1px solid #eee;
-  font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+  border: 1px solid #eee !important;
+  font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif !important;
+  margin: 0px 8px;
 }
 
 .headerLink {
@@ -67,7 +73,7 @@
 }
 .rightContent {
   width: 100%;
-  position: relative;
+  /*   position: relative; */
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -101,4 +107,6 @@
 .header {
   display: flex;
   justify-content: space-between;
+  background-color: #fff;
+  border-bottom: 1px solid #ededf5;
 }

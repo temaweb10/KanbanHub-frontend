@@ -3,14 +3,12 @@ import { Route, Routes } from "react-router-dom";
 import AcceptInvite from "./components/AcceptInvite/AcceptInvite";
 import AuthRoute from "./components/AuthRoute";
 import BoardLayout from "./components/BoardLayout";
-import Header from "./components/Header/Header";
-import HeaderBoard from "./components/HeaderBoard/HeaderBoard";
 import PageLayout from "./components/PageLayout";
 import PageLayoutAuth from "./components/PageLayoutAuth";
 import RedirectAuthRoute from "./components/RedirectAuthRoute";
-import { UserProvider } from "./context/UserContext";
 import Dashboards from "./pages/Dashboards/Dashboards";
 import KanbanBoard from "./pages/KanbanBoard/KanbanBoard";
+import KanbanBoardSettings from "./pages/KanbanBoardSettings/KanbanBoardSettings";
 import { Login } from "./pages/Login/Login";
 import NotFound from "./pages/NotFound/NotFound";
 import { Registration } from "./pages/Registration/Registration";
@@ -64,6 +62,16 @@ function App() {
             <BoardLayout>
               <AuthRoute>
                 <KanbanBoard />
+              </AuthRoute>
+            </BoardLayout>
+          }
+        />
+        <Route
+          path="/dashboard/:idProject/settings"
+          element={
+            <BoardLayout>
+              <AuthRoute>
+                <KanbanBoardSettings />
               </AuthRoute>
             </BoardLayout>
           }

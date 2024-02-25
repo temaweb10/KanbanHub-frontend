@@ -70,6 +70,7 @@ export const Login = () => {
             error={Boolean(errors.password?.message)}
             helperText={errors.password?.message}
             placeholder="Укажите пароль"
+            type={"password"}
           />
           <Button
             className={styles.loginButton}

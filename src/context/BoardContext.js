@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../axios";
-import socket from "../socket";
+
 export const BoardContext = createContext();
 
 export const BoardProvider = ({ children }) => {
@@ -10,7 +10,7 @@ export const BoardProvider = ({ children }) => {
   const [projectDataIsLoading, setProjectDataIsLoading] = useState(true);
   const params = useParams();
 
-  const updateData = (newData) => {
+  const updateBoardContext = (newData) => {
     setProjectContext({
       ...newData,
       usersProject: projectContext?.usersProject,
@@ -40,7 +40,7 @@ export const BoardProvider = ({ children }) => {
       <BoardContext.Provider
         value={{
           projectContext,
-          updateData,
+          updateBoardContext,
         }}
       >
         {children}
