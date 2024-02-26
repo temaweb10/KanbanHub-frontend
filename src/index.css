@@ -27,10 +27,10 @@ input {
 }
 
 .containerCenter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: calc(100% - 70px);
 }
 
 .card {

@@ -1,14 +1,15 @@
 .formTitle {
-  font-weight: 500;
-  font-size: 20px;
-  color: #242629;
-  margin: 0px 0px 8px 0px;
+  font-weight: 600;
+  font-size: 21px;
+  color: #111;
+  margin: 0px 0px 19px 0px;
 }
 
-.formLabel {
+.formSubTitle {
   font-weight: 500;
   font-size: 14px;
   color: #202430;
+  margin: 0px 0px 6px 0px;
 }
 
 .form {
@@ -20,4 +21,15 @@
   border-radius: 12px;
   width: 100%;
   height: min-content;
+}
+
+.button {
+  width: 100%;
+}
+
+.avatarLarge {
+  font-size: 48px !important;
+  width: 128px !important;
+  height: 128px !important;
+  margin-bottom: 24px !important;
 }

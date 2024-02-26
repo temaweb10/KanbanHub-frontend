@@ -1,16 +1,13 @@
 import PeopleIcon from "@mui/icons-material/People";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Avatar } from "@mui/material";
-import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { BoardContext } from "../../context/BoardContext";
-import { UserContext } from "../../context/UserContext";
-import { logout } from "../../redux/slices/auth";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import Menu from "../Menu/Menu";
 import styles from "../Menu/Menu.module.scss";
+import AvatarUI from "../UI/AvatarUI/AvatarUI";
 import stylesMenuBoard from "./MenuBoard.module.scss";
+
 function MenuBoard({
   visible,
   setMenuVisible,
@@ -19,8 +16,7 @@ function MenuBoard({
   setModalInviteUser,
 }) {
   const navigate = useNavigate();
-  console.log(projectData);
-  console.log(userData);
+
   return (
     <Menu
       userData={userData}
@@ -35,7 +31,7 @@ function MenuBoard({
           navigate(`/dashboard/${projectData._id}`);
         }}
       >
-        <Avatar
+        <AvatarUI
           className={styles.avatar}
           style={{
             backgroundColor: "#eee",
@@ -44,9 +40,9 @@ function MenuBoard({
             fontFamily: "Montserrat,Roboto,Helvetica,Arial,sans-serif",
             borderRadius: "9px",
           }}
-        >
-          {projectData.nameProject.slice(0, 1).toUpperCase()}
-        </Avatar>
+          avatarText={projectData.nameProject.slice(0, 1).toUpperCase()}
+          avatarUrl={""}
+        />
 
         <div className={styles.menuProfileColumn}>
           <span className={styles.menuProfileName}>

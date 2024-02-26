@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/slices/auth";
 import Menu from "../Menu/Menu";
 import stylesMenu from "../Menu/Menu.module.scss";
+import AvatarUI from "../UI/AvatarUI/AvatarUI";
 import styles from "./MenuUser.module.scss";
 function MenuUser({ userData, visible, setMenuVisible }) {
   const navigate = useNavigate();
@@ -21,17 +22,17 @@ function MenuUser({ userData, visible, setMenuVisible }) {
   return (
     <Menu userData={userData} visible={visible} setMenuVisible={setMenuVisible}>
       <div className={stylesMenu.menuProfile}>
-        <Avatar
+        <AvatarUI
           className={styles.avatar}
           style={{
             backgroundColor: "#eee",
             color: "#000",
             border: "1px solid #ccc",
-            fontFamily: "Montserrat,Roboto,Helvetica,Arial,sans-serif",
           }}
-        >
-          {userData.fullName.slice(0, 1).toUpperCase()}
-        </Avatar>
+          avatarText={userData.fullName.slice(0, 1).toUpperCase()}
+          avatarUrl={""}
+        />
+
         <div className={stylesMenu.menuProfileColumn}>
           <span className={stylesMenu.menuProfileName}>
             {" "}

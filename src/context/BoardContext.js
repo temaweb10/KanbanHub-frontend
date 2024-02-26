@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../axios";
-
+import Loader from "../components/Loader/Loader";
 export const BoardContext = createContext();
 
 export const BoardProvider = ({ children }) => {
@@ -35,16 +35,16 @@ export const BoardProvider = ({ children }) => {
     getInfoProject();
   }, []);
 
-  return (
-    !projectDataIsLoading && (
-      <BoardContext.Provider
-        value={{
-          projectContext,
-          updateBoardContext,
-        }}
-      >
-        {children}
-      </BoardContext.Provider>
-    )
+  return !projectDataIsLoading ? (
+    <BoardContext.Provider
+      value={{
+        projectContext,
+        updateBoardContext,
+      }}
+    >
+      {children}
+    </BoardContext.Provider>
+  ) : (
+    <Loader style={{ height: "100vh" }} />
   );
 };

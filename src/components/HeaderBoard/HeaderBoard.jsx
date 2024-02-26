@@ -1,5 +1,4 @@
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,13 +7,14 @@ import { UserContext } from "../../context/UserContext";
 import MenuBoard from "../MenuBoard/MenuBoard";
 import MenuUser from "../MenuUser/MenuUser";
 import ModalInviteUser from "../ModalInviteUser/ModalInviteUser";
+import AvatarUI from "../UI/AvatarUI/AvatarUI";
 import styles from "./HeaderBoard.module.scss";
 const HeaderBoard = () => {
   const [modal, setModal] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuBoardVisible, setMenuBoardVisible] = useState(false);
   const userData = useContext(UserContext);
-  const { projectContext, updateData } = useContext(BoardContext);
+  const { projectContext } = useContext(BoardContext);
 
   return (
     <div className={styles.header}>
@@ -24,9 +24,11 @@ const HeaderBoard = () => {
           setMenuBoardVisible(true);
         }}
       >
-        <Avatar className={styles.avatarProject}>
-          {projectContext?.nameProject.slice(0, 1).toUpperCase()}
-        </Avatar>
+        <AvatarUI
+          className={styles.avatarProject}
+          avatarText={projectContext?.nameProject.slice(0, 1).toUpperCase()}
+          avatarUrl={""}
+        />
 
         <span className={styles.projectName}>
           {projectContext?.nameProject}
@@ -49,20 +51,15 @@ const HeaderBoard = () => {
           Пригласить в команду
         </Button>
 
-        <Avatar
+        <AvatarUI
           className={styles.avatarProject}
-          style={{
-            backgroundColor: "#eee",
-            color: "#000",
-            border: "1px solid #ccc",
-            fontFamily: "Montserrat,Roboto,Helvetica,Arial,sans-serif",
-          }}
           onClick={() => {
             setMenuVisible(true);
           }}
-        >
-          {userData.fullName.slice(0, 1).toUpperCase()}
-        </Avatar>
+          avatarUrl={""}
+          avatarText={userData.fullName.slice(0, 1).toUpperCase()}
+        />
+
         <ModalInviteUser setModal={setModal} modal={modal} />
         <MenuBoard
           projectData={projectContext}
