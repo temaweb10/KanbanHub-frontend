@@ -51,9 +51,10 @@ function KanbanBoardSettings() {
             }}
             required={true}
           />
-          <Button className={formStyles.button} onClick={editProject}>
+          <Button  className={formStyles.button} onClick={editProject}>
             Сохранить изменения
           </Button>
+
         </div>
       </Form>
     </Container>
