@@ -1,0 +1,74 @@
+.modalContent{
+  height: min-content;
+  min-width: 560px;
+  top: 70%;
+  left: 30%;
+}
+
+.avatarMenuContent{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 100%;
+  padding: 20px;
+  overflow: hidden
+}
+
+.tab{
+
+}
+
+.tabs{
+  .MuiTabs-indicator {
+    display: flex;
+    justify-content: center;
+    background-color: #635ee7;
+  }
+   &.MuiTabs-indicatorSpan {
+    max-width: 40%;
+    width: 100%!important;
+     background-color: #635ee7!important;
+  }
+}
+
+.fileUploadBox{
+  display: flex;
+  flex-direction: column;
+
+  .fileUpload {
+    display: flex;
+    flex-direction: column;
+    border: 3px dashed #111;
+    padding: 1.5rem;
+    position: relative;
+    cursor: pointer;
+  margin-bottom: 9px;
+    .fileUploadInner{
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+
+      .fileUploadInner p{
+        font-size: 0.87rem;
+        margin-top: 10px;
+        color: #bbcada;
+      }
+
+
+    }
+    .fileUploadInput{
+      display: block;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      cursor: pointer;
+
+    }
+  }
+}
+

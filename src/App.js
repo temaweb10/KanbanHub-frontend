@@ -73,6 +73,7 @@ function App() {
                         <KanbanBoard/>
                     </AuthRoute>
                 </BoardLayout>}/>
+
                 <Route
                     path="/dashboard/:idProject/settings"
                     element={

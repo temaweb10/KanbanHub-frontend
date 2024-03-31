@@ -1,25 +1,22 @@
 import { Container } from "@mui/material";
 import React, { useContext, useState } from "react";
-import axios from "../../axios";
 import AvatarUI from "../../components/UI/AvatarUI/AvatarUI";
 import Button from "../../components/UI/Button/Button";
 import Form from "../../components/UI/Form/Form";
 import formStyles from "../../components/UI/Form/Form.module.scss";
 import Input from "../../components/UI/Input/Input";
 import { BoardContext } from "../../context/BoardContext";
+import MenuSetAvatar from "../../components/MenuSetAvatar/MenuSetAvatar";
+import ProjectService from "../../API/ProjectService";
+import {useFetching} from "../../hooks/useFetching";
+
 function KanbanBoardSettings() {
   const { projectContext } = useContext(BoardContext);
-  const [settings, setSettings] = useState({
-    nameProject: projectContext.nameProject,
-  });
-
-  const editProject = () => {
-    axios
-      .post(`/project/${projectContext._id}/edit`, { ...settings })
-      .catch((err) => {
-        alert("Ошибка при изменении дашбоарда");
-      });
-  };
+  const [settings, setSettings] = useState({nameProject: projectContext.nameProject});
+  const [menuAvatarVisible,setMenuAvatarVisible] = useState(false)
+  const [editProject, isEditProjectLoading, editProjectError] = useFetching(async () => {
+    await ProjectService.editProject(settings,projectContext._id)
+  })
 
   return (
     <Container maxWidth="lg" className="containerCenter">
@@ -32,15 +29,15 @@ function KanbanBoardSettings() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+                position:'relative'
             }}
           >
-            {" "}
             <AvatarUI
               className={formStyles.avatarLarge}
-              avatarText={projectContext.nameProject.slice(0, 1).toUpperCase()}
-              avatarColor={""}
-              avatarUrl={""}
+              onClick={()=>{setMenuAvatarVisible(true)}}
+              avatarSettings={{avatarUrl:projectContext?.avatarUrl,avatarText:projectContext?.avatarText,avatarColor:projectContext?.avatarColor,}}
             />
+              <MenuSetAvatar setMenuVisible={setMenuAvatarVisible} menuVisible={menuAvatarVisible}/>
           </div>
           <h3 className={formStyles.formSubTitle}>Название дашбоарда</h3>
           <Input

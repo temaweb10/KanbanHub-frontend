@@ -15,13 +15,12 @@ function Menu(props) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [divRef]);
-
   const handleClickOutside = (event) => {
     if (divRef.current && !divRef.current.contains(event.target)) {
       props.setMenuVisible(false);
     }
   };
-  console.log(props);
+
   return (
     props.visible && (
       <div className={[styles.menu, props.className].join(" ")} ref={divRef}>

@@ -13,13 +13,12 @@ import Modal from "../../components/UI/Modal/Modal";
 import { BoardContext } from "../../context/BoardContext";
 import { UserContext } from "../../context/UserContext";
 import indexPage from "../../indexPage.css";
-import socket from "../../socket";
+import {socket} from "../../socket";
 import styles from "./KanbanBoard.module.css";
 const ITEM_TYPES = {
   CARD: "card",
   TASK: "task",
 };
-
 const DATASET = {
   tasks: {
     "task-1": { id: "task-1", content: "water plants" },
@@ -123,7 +122,6 @@ const DATASET = {
   ],
   cardOrder: ["card-1", "card-2", "card-3", "card-4"],
 };
-
 const data = {
   _id: "65a3a81cc797b7925a99fc36",
   nameProject: "testpgroject",
@@ -239,7 +237,6 @@ const data = {
   ],
   __v: 12,
 };
-
 const Container = styled.div`
   display: flex;
   @media (max-width: 720px) {
@@ -268,7 +265,6 @@ function KanbanBoard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const { projectContext, updateBoardContext } = useContext(BoardContext);
-  const [projectColumns, setProjectColumns] = useState(data.columns);
   const [tasks, setTasks] = useState(dataset.tasks);
   const [cards, setCards] = useState(projectContext.columns);
   const userData = useContext(UserContext);
@@ -279,6 +275,7 @@ function KanbanBoard() {
   const copyInputRef = useRef(null);
 
   useEffect(() => {
+    document.title = `Дашбоард ${projectContext.nameProject}`
     const handleProjectUpdated = (resStringify) => {
       const resDataParse = JSON.parse(resStringify);
       if (userData._id !== resDataParse.idUserChangedProject) {
@@ -299,12 +296,12 @@ function KanbanBoard() {
   const onAddNewCard = () => {
     axios
       .post(`/project/${params.idProject}/columnCreate`, {
-        name: "test",
+        name: `колонка №${projectContext.columns.length}`,
       })
       .then((res) => {
-        setProject(res.data);
-        setCards(res.data.columns);
-        setIsLoading(false);
+        console.log(res.data)
+        updateBoardContext({...projectContext, columns:[...projectContext.columns,res.data]});
+
       })
       .catch((err) => {
         alert(err);
@@ -389,11 +386,10 @@ function KanbanBoard() {
             cards={cards}
             tasks={tasks}
             cardOrder={cardOrder}
-            projectColumns={projectColumns}
             setCards={setCards}
             setTasks={setTasks}
             setCardOrder={setCardOrder}
-            setProjectColumns={setProjectColumns}
+
           />
           <Menu>
             {/*   <Note>

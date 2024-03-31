@@ -5,7 +5,7 @@ import styled from "styled-components";
 import axios from "../../axios";
 import { BoardContext } from "../../context/BoardContext";
 import { UserContext } from "../../context/UserContext";
-import socket from "../../socket";
+import {socket} from "../../socket";
 import Card from "../Card/Card";
 const CardsContainer = styled.div`
   display: flex;
@@ -18,9 +18,7 @@ const ITEM_TYPES = {
   TASK: "task",
 };
 
-function genRandomID() {
-  return (Math.random() + 1).toString(36).substring(7);
-}
+
 function DragDropCards({
   cards,
   tasks,
@@ -33,25 +31,22 @@ function DragDropCards({
   const [editing, setEditing] = useState(null);
   const userData = useContext(UserContext);
   const { projectContext, updateBoardContext } = useContext(BoardContext);
+  console.log(projectContext)
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
-    console.log(result);
-    if (
-      !destination ||
-      (destination.droppableId === source.droppableId &&
-        destination.index === source.index)
-    ) {
+    if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)){
       return;
     }
-    console.log(type);
+
     if (type === ITEM_TYPES.CARD) {
+
       reorderCards(source, destination, draggableId); //перенос колонок
     } else {
-      const start = cards.find((el) => {
-        return el._id == source.droppableId;
+      const start = projectContext.columns.find((el) => {
+        return el._id === source.droppableId;
       });
-      const finish = cards.find((el) => {
-        return el._id == destination.droppableId;
+      const finish = projectContext.columns.find((el) => {
+        return el._id === destination.droppableId;
       });
 
       if (start._id === finish._id) {
@@ -62,79 +57,74 @@ function DragDropCards({
           draggableId
         );
       } else {
+        console.log(start)
         moveTask(start, finish, source.index, destination.index, draggableId);
       }
     }
-    console.log("onDragEnd");
+
   };
 
-  const reorderCards = (source, destination, draggableId) => {
+  const reorderCards = (start,final,source, destination, draggableId) => {
     console.log("reorderCards");
-    console.log(reorderCards);
-    const newCardOrder = Array.from(cardOrder);
-    newCardOrder.splice(source.index, 1);
-    newCardOrder.splice(destination.index, 0, draggableId);
-    setCardOrder(newCardOrder);
-  };
+    console.log({start,final,source, destination, draggableId})
+    const newColumns = Array.from(projectContext.columns);
+    newColumns.splice(start.index, 1);
+    newColumns.splice(final.index, 0, projectContext.columns.find((el) => {
+      return el._id === source;
+    }));
+    updateBoardContext({...projectContext,columns:newColumns})
 
+     axios
+        .post(`/project/${params.idProject}/updateColumns`, {
+          newColumns
+        })
+        .then((res) => {
+          socket.emit(
+              "changeProject",
+              JSON.stringify({
+                idUserChangedProject: userData._id,
+                idProject: params.idProject,
+              })
+          );
+        })
+        .catch((err) => {
+          alert(err);
+          return <Navigate to={"/"} />;
+        });
+  };
   const reorderTasksWithinCard = async (
-    card,
+    start,
     sourceIdx,
     destinationIdx,
     draggableId
   ) => {
-    console.log("reorderTasksWithinCard");
-    /* внутри своей колонки */
-    console.log(card);
-    const newTask = Array.from(card.kanbanCards);
-    console.log(newTask);
-    newTask.splice(sourceIdx, 1);
-    newTask.splice(
+    /* перенос задания внутри своей колонки */
+    const newKanbanCards = Array.from(start.kanbanCards);
+
+    newKanbanCards.splice(sourceIdx, 1);
+    newKanbanCards.splice(
       destinationIdx,
       0,
-      card.kanbanCards.find((el) => {
-        return el._id == draggableId;
+        start.kanbanCards.find((el) => {
+        return el._id === draggableId;
       })
     );
-    console.log({
-      ...projectContext,
-      columns: cards.map((el) => {
-        if (el.columnId == card.columnId) {
-          return { ...el, kanbanCards: newTask };
-        } else {
-          return el;
-        }
-      }),
-    });
-    updateBoardContext({
-      ...projectContext,
-      columns: cards.map((el) => {
-        if (el.columnId == card.columnId) {
-          return { ...el, kanbanCards: newTask };
-        } else {
-          return el;
-        }
-      }),
-    });
-    /*  setCards( 
-      cards.map((el) => {
-        if (el.columnId == card.columnId) {
-          return { ...el, kanbanCards: newTask };
-        } else {
-          return el;
-        }
-      })
-    ); */
 
-    await axios
+    const updatedColumnsBoard = {
+      columns: projectContext.columns.map((el) => {
+        if (el.columnId === start.columnId) {
+          return { ...el, kanbanCards: newKanbanCards };
+        } else {
+          return el;
+        }
+      }),
+    }
+
+    updateBoardContext({...projectContext,...updatedColumnsBoard});
+
+   await axios
       .post(`/project/${params.idProject}/updateColumns`, {
-        newColumns: cards.map((el) => {
-          if (el.columnId == card.columnId) {
-            return { ...el, kanbanCards: newTask };
-          } else {
-            return el;
-          }
-        }),
+        newColumns: [...updatedColumnsBoard.columns],
       })
       .then(() => {
         socket.emit(
@@ -144,18 +134,12 @@ function DragDropCards({
             idProject: params.idProject,
           })
         );
-        alert("change in column");
       })
       .catch((err) => {
         alert(err);
         return <Navigate to={"/"} />;
       });
 
-    /*   axios.post(`/project/${params.idProject}/kanbanCard-create/column/${card.columnId}`).then((res) => {
-      console.log(res)
-    }).catch((err) => {
-      alert(err)
-    }); */
   };
 
   const moveTask = async (
@@ -165,31 +149,32 @@ function DragDropCards({
     destinationIdx,
     draggableId
   ) => {
-    console.log("moveTask");
+    console.log({
+      start:start, finish:finish, sourceIdx:sourceIdx, destinationIdx:destinationIdx, draggableId:draggableId
+    });
     //перенос задания в другую колонку
-    const startTaskIds = Array.from(start.kanbanCards);
-    startTaskIds.splice(sourceIdx, 1);
+
+    const startKanbanCards = Array.from(start.kanbanCards);
+
     const newStart = {
       ...start,
-      kanbanCards: startTaskIds,
-    };
-    const finishTaskIds = Array.from(finish.kanbanCards);
-    finishTaskIds.splice(
-      destinationIdx,
-      0,
-      start.kanbanCards.find((el) => {
-        return el._id == draggableId;
-      })
-    );
+      kanbanCards: startKanbanCards.toSpliced(sourceIdx,1),
+    };//колонка из которой было перенесено задание
+
+    const finishKanbanCards = Array.from(finish.kanbanCards);
+
     const newFinish = {
       ...finish,
-      kanbanCards: finishTaskIds,
-    };
-
-    updateBoardContext({
-      ...projectContext,
+      kanbanCards: finishKanbanCards.toSpliced(destinationIdx,
+          0,
+          start.kanbanCards.find((el) => {
+            return el._id === draggableId;
+          })),
+    };//колонка с обновленными заданиями
+    
+    const updatedColumnsBoard = {
       columns: [
-        ...cards.map((cardsEl) => {
+        ...projectContext.columns.map((cardsEl) => {
           if (cardsEl._id === newFinish._id) {
             return newFinish;
           } else if (cardsEl._id !== newStart._id) {
@@ -203,39 +188,13 @@ function DragDropCards({
           }
         }),
       ],
-    });
-    /*  setCards([
-      ...cards.map((cardsEl) => {
-        if (cardsEl._id === newFinish._id) {
-          return newFinish;
-        } else if (cardsEl._id !== newStart._id) {
-          return { ...cardsEl };
-        }
+    }
+  
+    updateBoardContext({...projectContext,...updatedColumnsBoard});
 
-        if (cardsEl._id === newStart._id) {
-          return newStart;
-        } else if (cardsEl._id !== newFinish._id) {
-          return { ...cardsEl };
-        }
-      }),
-    ]); */
-    await axios
+  await axios
       .post(`/project/${params.idProject}/updateColumns`, {
-        newColumns: [
-          ...cards.map((cardsEl) => {
-            if (cardsEl._id === newFinish._id) {
-              return newFinish;
-            } else if (cardsEl._id !== newStart._id) {
-              return { ...cardsEl };
-            }
-
-            if (cardsEl._id === newStart._id) {
-              return newStart;
-            } else if (cardsEl._id !== newFinish._id) {
-              return { ...cardsEl };
-            }
-          }),
-        ],
+        newColumns:  [...updatedColumnsBoard.columns]
       })
       .then((res) => {
         socket.emit(
@@ -264,6 +223,13 @@ function DragDropCards({
           ...projectContext,
           columns: doc.data,
         });
+        socket.emit(
+            "changeProject",
+            JSON.stringify({
+              idUserChangedProject: userData._id,
+              idProject: params.idProject,
+            })
+        );
       })
       .catch((err) => {
         alert(err);
@@ -329,14 +295,14 @@ function DragDropCards({
         droppableId="all-cards"
         direction="horizontal"
         type="card"
-        isDropDisabled={true}
+
       >
         {(provided) => (
           <CardsContainer {...provided.droppableProps} ref={provided.innerRef}>
+
             {projectContext.columns.map((el, index) => {
               /*   const card = cards[id];  */
               /*   const cardTasks = card.taskIds.map((taskId) => tasks[taskId]); */
-              console.log(el);
               return (
                 <Card
                   key={el._id}

@@ -63,12 +63,7 @@ function Card(props) {
           className={styles.cardContainer}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          id={props.card.id}
-          /*  onClick={(e) => {
-            e.stopPropagation();
-            alert(111);
-          }} */
-        >
+          id={props.card._id}>
           <div className={styles.titleBar}>
             {props.isTitleEditing ? (
               <EditInput
@@ -90,26 +85,14 @@ function Card(props) {
             <Cross onClick={props.onRemoveCard}>x</Cross>
           </div>
 
-          {/*   <input
-                onChange={newTask}
-                type="text"
-                ref={inputRef}
-                onFocus={onFocusHandler}
-                onBlur={onBlurHandler}
-              />
-              {showDiv && (
-                <div ref={divRef} style={{ position: "relative" }}>
-                  {" "}
-                  <FindUser />
-                </div>
-              )} */}
+
           <CreatingTask
             onSaveTask={onSaveTask}
             idProject={props.idProject}
             /*   usersInProject={props.usersInProject} */
           />
 
-          <Droppable droppableId={props.card._id} type="task">
+          <Droppable  droppableId={props.card._id} type="task">
             {(provided, snapshot) => (
               <Fragment>
                 <div
@@ -118,18 +101,18 @@ function Card(props) {
                   {...provided.droppableProps}
                   isDraggingOver={snapshot.isDraggingOver}
                 >
-                  {props.card?.kanbanCards?.map((task, index) => (
-                    <Task
-                      key={task._id}
-                      task={task}
-                      index={index}
-                      onSaveTaskEdit={(content) =>
-                        props.onSaveTaskEdit(task._id, content)
-                      }
-                      onTaskDoubleClick={() => props.onTaskDoubleClick(task)}
-                      /*     isTaskEditing={props.isTaskEditing(task)} */
+                  {props.card?.kanbanCards?.map((task, index) => {
+                    return <Task
+                        key={task._id}
+                        task={task}
+                        index={index}
+                        onSaveTaskEdit={(content) =>
+                            props.onSaveTaskEdit(task._id, content)
+                        }
+                        onTaskDoubleClick={() => props.onTaskDoubleClick(task)}
+                        /*     isTaskEditing={props.isTaskEditing(task)} */
                     />
-                  ))}
+                  })}
                 </div>
                 {provided.placeholder}
               </Fragment>

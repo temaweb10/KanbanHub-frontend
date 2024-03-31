@@ -11,6 +11,10 @@ export const BoardProvider = ({ children }) => {
   const params = useParams();
 
   const updateBoardContext = (newData) => {
+    console.log({
+      ...newData,
+      usersProject: projectContext?.usersProject,
+    })
     setProjectContext({
       ...newData,
       usersProject: projectContext?.usersProject,
@@ -21,11 +25,11 @@ export const BoardProvider = ({ children }) => {
     const getInfoProject = async () => {
       try {
         const { data } = await axios.get(`/project/${params.idProject}`);
-        const usersInProject = await axios.get(
+        const usersProject = await axios.get(
           `/project/${params.idProject}/users`
         );
 
-        setProjectContext({ ...data, usersProject: usersInProject.data });
+        setProjectContext({ ...data, usersProject: usersProject.data });
         setProjectDataIsLoading(false);
       } catch (error) {
         console.log(error);

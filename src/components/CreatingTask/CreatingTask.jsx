@@ -11,10 +11,7 @@ function CreatingTask(props) {
   const params = useParams();
   const { projectContext } = useContext(BoardContext);
   const [newTask, setNewTask] = useState();
-  const [usersInProject, setUsersInProject] = useState(
-    projectContext.usersProject
-  );
-  console.log(projectContext);
+  const [usersInProject, setUsersInProject] = useState(projectContext.usersProject);
   const [usersInProjectIsLoading, setUsersInProjectIsLoading] = useState(false);
   const [showDiv, setShowDiv] = useState(false);
   const [showFindUsers, setShowFindUsers] = useState(false);
@@ -29,8 +26,6 @@ function CreatingTask(props) {
   };
 
   const onBlurHandler = (event) => {
-    console.log(event.target.dataset.menuItem);
-    console.log(divRef.current.contains(event.target));
     if (
       !inputRef.current.contains(event.target) &&
       !createFooterRef.current.contains(event.target) &&

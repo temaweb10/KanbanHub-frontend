@@ -1,9 +1,19 @@
 import { io } from "socket.io-client";
-const socket = io("http://localhost:3333", {
+import {serverUrl} from "./utils/constants";
+
+export const socket = io(serverUrl, {
   cors: {
-    origin: "http://localhost:3333",
+    origin: serverUrl,
     credentials: true,
   },
 });
 
-export default socket;
+export  const handleProjectUpdated = (resStringify,myUserId,updateBoardContext) => {
+  const resDataParse = JSON.parse(resStringify);
+  if (myUserId !== resDataParse.idUserChangedProject) {
+    updateBoardContext(resDataParse.projectUpdated);
+  }
+}
+
+
+

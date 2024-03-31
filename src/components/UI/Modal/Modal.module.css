@@ -27,7 +27,7 @@
   flex-direction: column;
   justify-content: center;
 
-  min-height: 15vh;
+  height: 100%;
 }
 
 .modalClose {

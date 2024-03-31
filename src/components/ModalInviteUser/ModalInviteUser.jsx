@@ -5,6 +5,8 @@ import { BoardContext } from "../../context/BoardContext";
 import Input from "../UI/Input/Input";
 import Modal from "../UI/Modal/Modal";
 import styles from "./ModalInviteUser.module.scss";
+import {clientUrl, serverUrl} from "../../utils/constants";
+
 function ModalInviteUser({ setModal, modal }) {
   const { projectContext, updateData } = useContext(BoardContext);
 
@@ -30,7 +32,7 @@ function ModalInviteUser({ setModal, modal }) {
                   .get(`/project/${projectContext._id}/generateInviteLink`)
                   .then((res) => {
                     setInviteLink(
-                      `http://localhost:3000/accept-invite/${res.data}`
+                      `${clientUrl}accept-invite/${res.data}`
                     );
                     setLinkIsLoading(false);
                   })

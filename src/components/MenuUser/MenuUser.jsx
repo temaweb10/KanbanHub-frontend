@@ -8,9 +8,12 @@ import Menu from "../Menu/Menu";
 import stylesMenu from "../Menu/Menu.module.scss";
 import AvatarUI from "../UI/AvatarUI/AvatarUI";
 import styles from "./MenuUser.module.scss";
-function MenuUser({ userData, visible, setMenuVisible }) {
-  const navigate = useNavigate();
+
+function MenuUser({ userData, visible, setMenuVisible,projectData }) {
+
+    const navigate = useNavigate();
   let dispath = useDispatch();
+
   const onClickLogout = () => {
     if (window.confirm("Вы точно хотите выйти из аккаунта")) {
       dispath(logout());
@@ -18,19 +21,12 @@ function MenuUser({ userData, visible, setMenuVisible }) {
       navigate("/login");
     }
   };
-
+    console.log(userData?.avatarUrl)
   return (
-    <Menu userData={userData} visible={visible} setMenuVisible={setMenuVisible}>
+    <Menu visible={visible} setMenuVisible={setMenuVisible}>
       <div className={stylesMenu.menuProfile}>
         <AvatarUI
-          className={styles.avatar}
-          style={{
-            backgroundColor: "#eee",
-            color: "#000",
-            border: "1px solid #ccc",
-          }}
-          avatarText={userData.fullName.slice(0, 1).toUpperCase()}
-          avatarUrl={""}
+          avatarSettings={{avatarUrl:userData?.avatarUrl,avatarText: !userData?.avatarUrl || !userData.avatarColor ? userData.fullName : undefined,avatarColor:userData?.avatarColor,}}
         />
 
         <div className={stylesMenu.menuProfileColumn}>

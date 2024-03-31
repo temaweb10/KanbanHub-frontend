@@ -10,71 +10,43 @@ import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import Modal from "../../components/UI/Modal/Modal";
 import styles from "./Dashboards.module.scss";
+import ProjectService from "../../API/ProjectService";
+import {useFetching} from "../../hooks/useFetching";
 function Dashboards() {
   document.title = "Дашбоарды";
   const [dashboards, setDashboards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [modal, setModal] = useState(false);
-
   const userId = useSelector((state) => state?.auth?.data?._id);
   const navigate = useNavigate();
   let modalInputRef = useRef();
-  useEffect(() => {
-    axios
-      .get(`/projects`)
-      .then((res) => {
-        console.log(res.data);
-        setDashboards(res.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error);
-      });
-  }, []);
 
-  const createDashboard = async () => {
-    console.log(modalInputRef.current.value);
-    if (modalInputRef.current.value) {
-      await axios
-        .post(`/project`, {
-          nameProject: modalInputRef.current.value,
-        })
-        .then((res) => {
-          return navigate(`/dashboard/${res.data._id}`);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error);
-        });
-    } else {
-      alert("Укажите название проекта");
-    }
-  };
-  const deleteDashboard = async (idProject) => {
-    if (
-      window.confirm(
-        "Для удаления дашбоарда нажмите кнопку «Да». Обращаем внимание, что удаление приведет к потере всех данных внутри данного дашбоарда. "
+  const [getProjects, isGetProjectsLoading, getProjectsError] = useFetching(async () => {
+    const response = await ProjectService.getProjects()
+    setDashboards(response.data)
+  })
+  const [createProject, isCreateProjectLoading, createProjectError] = useFetching(async (nameProject) => {
+    const response = await ProjectService.createProject(nameProject)
+    navigate(`/dashboard/${response.data._id}`);
+  })
+
+  const [deleteProject, isDeleteProjectLoading, deleteProjectError] = useFetching(async (idProject) => {
+    await ProjectService.deleteProject(idProject)
+    if(!deleteProjectError){
+      setDashboards(
+          dashboards.filter((el) => {
+            return el._id !== idProject;
+          })
       )
-    ) {
-      await axios
-        .delete(`/project/${idProject}`)
-        .then((res) => {
-          setDashboards(
-            dashboards.filter((el) => {
-              return el._id !== idProject;
-            })
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error);
-        });
+    }else{
+      alert(deleteProjectError)
     }
-  };
+  })
+
+  useEffect(() => {getProjects()}, []);
+
   return (
     <div>
-      {isLoading === false ? (
+      {isGetProjectsLoading === false ? (
         dashboards.length ? (
           <Container maxWidth="lg" className={styles.containerDashboards}>
             <h2 className={styles.dashboardTitle}>Дашбоарды</h2>
@@ -92,7 +64,7 @@ function Dashboards() {
                         : false
                     }
                     key={el._id}
-                    deleteDashboard={deleteDashboard}
+                    deleteDashboard={(idProject)=>deleteProject(idProject)}
                   />
                 );
               })}
@@ -139,7 +111,13 @@ function Dashboards() {
             placeholder="Название дашбоарда"
           />
 
-          <Button onClick={createDashboard}>Создать дашбоард</Button>
+          <Button /*onClick={createDashboard}*/ onClick={()=>{
+            if (modalInputRef.current.value) {
+              createProject(modalInputRef.current.value)
+            } else {
+              alert("Укажите название проекта");
+            }
+          }}>Создать дашбоард</Button>
         </div>
       </Modal>
     </div>

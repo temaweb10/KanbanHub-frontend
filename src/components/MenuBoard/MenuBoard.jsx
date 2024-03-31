@@ -32,16 +32,7 @@ function MenuBoard({
         }}
       >
         <AvatarUI
-          className={styles.avatar}
-          style={{
-            backgroundColor: "#eee",
-            color: "#000",
-            border: "1px solid #ccc",
-            fontFamily: "Montserrat,Roboto,Helvetica,Arial,sans-serif",
-            borderRadius: "9px",
-          }}
-          avatarText={projectData.nameProject.slice(0, 1).toUpperCase()}
-          avatarUrl={""}
+          avatarSettings={{avatarUrl:projectData?.avatarUrl,avatarText:projectData?.nameProject,avatarColor:projectData?.avatarColor,}}
         />
 
         <div className={styles.menuProfileColumn}>

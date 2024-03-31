@@ -26,8 +26,7 @@ const HeaderBoard = () => {
       >
         <AvatarUI
           className={styles.avatarProject}
-          avatarText={projectContext?.nameProject.slice(0, 1).toUpperCase()}
-          avatarUrl={""}
+          avatarSettings={{avatarUrl:projectContext?.avatarUrl,avatarText:projectContext?.nameProject,avatarColor:projectContext?.avatarColor,}}
         />
 
         <span className={styles.projectName}>
@@ -56,9 +55,9 @@ const HeaderBoard = () => {
           onClick={() => {
             setMenuVisible(true);
           }}
-          avatarUrl={""}
-          avatarText={userData.fullName.slice(0, 1).toUpperCase()}
+          avatarSettings={{avatarUrl:userData?.avatarUrl,avatarText: !userData?.avatarUrl || !userData.avatarColor ? userData.fullName : undefined,avatarColor:userData?.avatarColor,}}
         />
+
 
         <ModalInviteUser setModal={setModal} modal={modal} />
         <MenuBoard
@@ -69,6 +68,7 @@ const HeaderBoard = () => {
           setModalInviteUser={setModal}
         />
         <MenuUser
+            projectData={projectContext}
           userData={userData}
           visible={menuVisible}
           setMenuVisible={setMenuVisible}
