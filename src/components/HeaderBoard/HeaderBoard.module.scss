@@ -33,13 +33,7 @@
 }
 
 .avatarProject {
-  font-weight: 300 !important;
-  line-height: 100% !important;
-  color: #202430 !important;
-  background: #f8f8fb !important;
   cursor: pointer;
-  border: 1px solid #eee !important;
-  font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif !important;
   margin: 0px 8px;
 }
 
@@ -80,19 +74,19 @@
   button {
     display: flex;
     align-items: center;
-    background-color: #000;
-    color: #fff;
+   /* background-color: #000;
+    color: #fff;*/
     font-size: 11px;
     font-weight: 600;
-    border: 1.3px solid #000;
+   /* border: 1.3px solid #000;*/
     border-radius: 10px;
     line-height: 0px;
     cursor: pointer;
     padding: 4px 7px;
   }
-  button:hover {
+ /* button:hover {
     color: #111;
-  }
+  }*/
   .avatar {
     margin-left: 8px;
   }

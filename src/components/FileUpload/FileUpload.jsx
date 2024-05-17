@@ -11,7 +11,7 @@ function FileUpload({uploadUrl,textButton,text,icon,idProject}) {
   const userData = useContext(UserContext);
   const { projectContext, updateBoardContext } = useContext(BoardContext);
   const editProject = (e) => {
-    e.preventDefault()
+
     const formData = new FormData();
     formData.append('avatar', selectAvatarImage);
 

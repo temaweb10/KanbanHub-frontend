@@ -1,5 +1,5 @@
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import Button from "@mui/material/Button";
+import Button from "../UI/Button/Button"
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { BoardContext } from "../../context/BoardContext";
@@ -41,7 +41,6 @@ const HeaderBoard = () => {
           </Link>
         </span>
         <Button
-          className={styles.inviteButton}
           onClick={() => {
             setModal(true);
           }}

@@ -1,23 +1,23 @@
 .input {
   font-size: calc(6px + 8 * (100vw - 320px) / 880) !important;
-  font-weight: 600 !important;
-  color: #111 !important;
-  outline: 1px solid #6b6a6a !important;
+  font-weight: 400 !important;
+  color: #1e1e1e;
+  line-height: 110%;
   height: 44px;
   width: 100%;
   border-radius: 8px;
-
-  border: none !important;
-  background-color: #fff;
+  background-color: #f8f8fb ;
   padding: 0.5rem;
   margin-bottom: 8px;
+  border: 1px solid #EDEDF5;
+  outline: none;
 }
 
 .input:focus {
-  outline: 1.4px solid #000 !important;
+  background-color: #f8f8fb;
 }
 
 .input:hover {
   transition: 0.2s;
-  background-color: #f3f3f3;
+  background-color: #f8f8fb;
 }

@@ -6,18 +6,20 @@ import Form from "../../components/UI/Form/Form";
 import formStyles from "../../components/UI/Form/Form.module.scss";
 import Input from "../../components/UI/Input/Input";
 import { BoardContext } from "../../context/BoardContext";
+import {UserContext} from "../../context/UserContext";
 import MenuSetAvatar from "../../components/MenuSetAvatar/MenuSetAvatar";
 import ProjectService from "../../API/ProjectService";
 import {useFetching} from "../../hooks/useFetching";
 
 function KanbanBoardSettings() {
   const { projectContext } = useContext(BoardContext);
+  const userData = useContext(UserContext);
   const [settings, setSettings] = useState({nameProject: projectContext.nameProject});
   const [menuAvatarVisible,setMenuAvatarVisible] = useState(false)
   const [editProject, isEditProjectLoading, editProjectError] = useFetching(async () => {
     await ProjectService.editProject(settings,projectContext._id)
   })
-
+  console.log(projectContext)
   return (
     <Container maxWidth="lg" className="containerCenter">
       <Form>
@@ -35,7 +37,7 @@ function KanbanBoardSettings() {
             <AvatarUI
               className={formStyles.avatarLarge}
               onClick={()=>{setMenuAvatarVisible(true)}}
-              avatarSettings={{avatarUrl:projectContext?.avatarUrl,avatarText:projectContext?.avatarText,avatarColor:projectContext?.avatarColor,}}
+              avatarSettings={{avatarUrl:projectContext?.avatarUrl,avatarColor:projectContext?.avatarColor,avatarText:projectContext.nameProject}}
             />
               <MenuSetAvatar setMenuVisible={setMenuAvatarVisible} menuVisible={menuAvatarVisible}/>
           </div>

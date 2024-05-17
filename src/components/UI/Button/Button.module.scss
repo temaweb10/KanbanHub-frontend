@@ -1,19 +1,25 @@
 .button {
-  font-size: calc(6px + 8 * (100vw - 320px) / 880);
+  font-size: calc(6px + 5 * (100vw - 320px) / 880);
   font-weight: 600;
   color: #fff;
-  border: 1.7px solid #000;
+  border: 0px;
   border-radius: 8px;
-  background-color: #000;
-
-  padding: 0.5rem;
+/*  background-color: #000;*/
+  /*background-color: #5f81ff;*/
+  background-color: #4182ff;
+  padding: 0.7rem;
   margin-top: 4px;
   cursor: pointer;
 }
 
 .button:hover {
   transition: 0.4s;
-  background-color: #fff;
-  border: 1.7px solid #000;
-  color: #111;
+  background-color: #2d74fb;
+ /* border: 1.7px solid #000;
+  color: #111;*/
+}
+
+.button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
